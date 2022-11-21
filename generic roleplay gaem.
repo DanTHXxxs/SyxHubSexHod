@@ -1,0 +1,318 @@
+repeat wait() until game:IsLoaded()
+local PlaceId = game.PlaceId
+if PlaceId == 4598019433 then
+
+local repo = 'https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/'
+
+local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
+local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+
+local Window = Library:CreateWindow({
+
+    Title = "[⚪] Sy x Hub | generic roleplay gaem. | " ..os.date("%d ")..os.date("%A ")..os.date("%B ")..os.date("%Y"),0,9356831478,
+    Center = true, 
+    AutoShow = true,
+})
+
+
+local Tabs = {
+
+    Main = Window:AddTab('General'),
+	Visuals = Window:AddTab('Visuals'), 
+    ['UI Settings'] = Window:AddTab('UI Settings'),
+}
+
+
+--Main
+local LeftGroupBox = Tabs.Main:AddLeftGroupbox('\          \\\\ Main //')
+local pVp = Tabs.Main:AddRightGroupbox('\           \\\\ PvP //')
+--Visuals
+local bccc = Tabs.Visuals:AddLeftGroupbox('[+]')
+
+
+
+local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
+
+
+MenuGroup:AddButton('Unload', function() Library:Unload() end)
+MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'F4', NoUI = true, Text = 'Menu keybind' }) 
+
+Library.ToggleKeybind = Options.MenuKeybind 
+
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+SaveManager:IgnoreThemeSettings() 
+
+
+SaveManager:SetIgnoreIndexes({ 'MenuKeybind' }) 
+
+
+ThemeManager:SetFolder('Sy x Hub [Save]')
+SaveManager:SetFolder('Sy x Hub [Save]/specific-game')
+
+
+SaveManager:BuildConfigSection(Tabs['UI Settings']) 
+
+ThemeManager:ApplyToTab(Tabs['UI Settings'])
+
+
+
+
+pVp:AddToggle('MyToggle', {
+    Text = 'HitBox [Head Only!!]',
+    Default = false, 
+})
+
+
+_G.Toggle = false
+
+Toggles.MyToggle:OnChanged(function(State)
+  
+doodoo = State
+
+while doodoo do 
+    wait(1)
+      pcall(function()
+       for _, player in next, game:GetService("Players"):GetChildren() do
+        if player.Character and player.Name ~= game.Players.LocalPlayer.Name then
+            if player.Character:FindFirstChild("Head") then
+                player.Character.Head.CanCollide = false
+                player.Character.Head.Size = Vector3.new(head, head, head)
+ 
+                if player.Character.Head:FindFirstChild("Mesh") then
+                    player.Character.Head.Mesh:Destroy()
+                end
+ 
+                player.Character.Head.Transparency = Transparency
+   end
+        end
+end
+end)
+end
+ 
+end)
+
+
+
+pVp:AddSlider('HitbxSlider', {
+    Text = 'Hitbox Radius',
+
+
+    Default = 0,
+    Min = 1.3,
+    Max = 6,
+    Rounding = 1,
+
+    Compact = false, 
+})
+
+local Number = Options.HitbxSlider.Value
+Options.HitbxSlider:OnChanged(function(Value)
+  head = Value
+end)
+
+Options.HitbxSlider:SetValue(1.3)
+
+
+
+pVp:AddSlider('HitbxSlider', {
+    Text = 'Hitbox Transparency',
+
+
+    Default = 0,
+    Min = 0,
+    Max = 1,
+    Rounding = 1,
+
+    Compact = false, 
+})
+
+local Number = Options.HitbxSlider.Value
+Options.HitbxSlider:OnChanged(function(Value)
+  Transparency = Value
+end)
+
+Options.HitbxSlider:SetValue(0)
+
+
+pVp:AddToggle('bbbxx', {
+    Text = 'Auto Click',
+    Default = false, 
+})
+
+
+Toggles.bbbxx:OnChanged(function(hh)
+_G.Autoclickck = hh
+while _G.Autoclickck do 
+	wait(1)
+ mouse1click()
+end
+end)
+
+
+
+
+
+getgenv().cham = false 
+getgenv().nameESP = false 
+getgenv().boxESP = false 
+getgenv().esp_loaded = false 
+getgenv().Visibility = false 
+getgenv().useTeamColor = false 
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Esp',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+  loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().Visibility = m 
+end)
+
+
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Box',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+  loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().boxESP = m 
+end)
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Name',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+   loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().nameESP = m 
+end)
+
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Chams',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+   loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().cham = m 
+end)
+
+
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Team Color',
+    Default = false, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m)  getgenv().useTeamColor = m  
+end)
+
+
+LeftGroupBox:AddToggle('Farm', {
+    Text = 'Auto Farm [FarmKart]',
+    Default = false, 
+})
+
+
+Toggles.Farm:OnChanged(function(ko) 
+
+_G.Star = ko
+while _G.Star do 
+
+
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").BarbStores.FarmKart.CustomerSeat.CFrame
+
+wait(7)
+
+
+game.Players.LocalPlayer.Backpack:FindFirstChildOfClass"Tool".Parent = game:GetService("Workspace")[game.Players.LocalPlayer.Name]
+
+wait(0.5)
+
+ mouse1click()
+
+wait(2)
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Karts[game.Players.LocalPlayer.Name].VehicleSeat.CFrame
+
+
+wait(1)
+
+local ts = game:GetService("TweenService")
+local part = game.Workspace.Karts[game.Players.LocalPlayer.Name].VehicleSeat
+local tp = {CFrame = New_CFrame}
+
+function tp(CFrametp)
+   ts:Create(part, TweenInfo.new((CFrametp.Position - part.Position).magnitude/32, Enum.EasingStyle.Quad), {CFrame = CFrametp.CFrame + Vector3.new(1.5,1.3,1)}):Play()
+end
+
+
+_G.AutoFarm = true
+
+
+while _G.AutoFarm do
+   wait()
+   local closer = 99999
+   for i,v in pairs(game.Workspace.Rice:GetChildren()) do
+       if v and v:FindFirstChild("PhysicalRice") and v:FindFirstChild("Health") and v.PhysicalRice:FindFirstChild("Middle") then
+           local range = (v.PhysicalRice.Middle.Position - game.Workspace.Karts[game.Players.LocalPlayer.Name].VehicleSeat.Position).magnitude
+           if v.Health.Value > 0 then
+               if range < closer then
+               closer = range
+               tp(v.PhysicalRice.Middle)
+               end
+           end
+       end
+   end
+end
+
+wait(inf)
+ end
+       
+end)
+
+
+LeftGroupBox:AddToggle('AFK', {
+    Text = 'Anti Afk',
+    Default = false,  
+})
+
+
+Toggles.AFK:OnChanged(function() 
+ 
+ local VirtualUser=game:service'VirtualUser'
+game:service'Players'.LocalPlayer.Idled:connect(function()
+VirtualUser:CaptureController()
+VirtualUser:ClickButton2(Vector2.new())
+end)
+
+end)
+
+
+
+local MyButton = LeftGroupBox:AddButton('Remove Punch', function()
+local Punch = game.Players.LocalPlayer.Backpack.Punch
+ 
+
+for i,v in pairs(getconnections(Punch.Changed)) do
+  v:Disable()
+end
+ 
+Punch:Remove()
+end)
+
+end
