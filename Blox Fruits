@@ -1132,7 +1132,7 @@ end
 
 
 
-Main:Toggle("AutoFarm [Level]",false,function(t)
+Main:Toggle("AutoFarm [Level 1 - 189]",false,function(t)
  _G.AutoFarm = t
 end)
 
@@ -1428,7 +1428,7 @@ spawn(function()
     elseif game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == true then
         if string.find(game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text,NameMon) then
             for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-                if v.Name == Mob and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid")   then
+                if v.Name == Mon and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid")   then
                     if v.Humanoid.Health > 0 then
                     repeat wait()
                         click()
