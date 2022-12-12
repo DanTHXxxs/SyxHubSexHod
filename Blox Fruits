@@ -1,5 +1,78 @@
 
+	
 _G.Color = Color3.fromRGB(152, 194, 219)
+
+
+
+
+
+_G.Setting_table = {
+    Auto_Farm = false,
+	Auto_Buso = false,
+}
+
+
+_G.Check_Save_Setting = "CheckSaveSetting"
+
+getgenv()['JsonEncode'] = function(msg)
+    return game:GetService("HttpService"):JSONEncode(msg)
+end
+getgenv()['JsonDecode'] = function(msg)
+    return game:GetService("HttpService"):JSONDecode(msg)
+end
+getgenv()['Check_Setting'] = function(Name)
+    if not _G.Dis and not isfolder('Sy x Hub Blox Fruits') then
+        makefolder('Sy x Hub Blox Fruits')
+    end
+    if not _G.Dis and not isfile('Sy x Hub Blox Fruits/'..Name..'.json') then
+        writefile('Sy x Hub Blox Fruits/'..Name..'.json',JsonEncode(_G.Setting_table))
+    end
+end
+getgenv()['Get_Setting'] = function(Name)
+    if not _G.Dis and isfolder('Sy x Hub Blox Fruits') and isfile('Sy x Hub Blox Fruits/'..Name..'.json') then
+        _G.Setting_table = JsonDecode(readfile('Sy x Hub Blox Fruits/'..Name..'.json'))
+        return _G.Setting_table
+	elseif not _G.Dis then
+        Check_Setting(Name)
+    end
+end
+getgenv()['Update_Setting'] = function(Name)
+    if not _G.Dis and isfolder('Sy x Hub Blox Fruits') and isfile('Sy x Hub Blox Fruits/'..Name..'.json') then
+        writefile('Sy x Hub Blox Fruits/'..Name..'.json',JsonEncode(_G.Setting_table))
+	elseif not _G.Dis then
+        Check_Setting(Name)
+    end
+end
+
+Check_Setting(_G.Check_Save_Setting)
+Get_Setting(_G.Check_Save_Setting)
+
+if _G.Setting_table.Save_Member then
+	getgenv()['MyName'] = game.Players.LocalPlayer.Name
+	print("Save Member")
+elseif _G.Setting_table.Save_All_Member then
+	getgenv()['MyName'] = "AllMember"
+	print("Save All Member")
+else
+	getgenv()['MyName'] = "None"
+	_G.Dis = true
+end
+
+Check_Setting(getgenv()['MyName'])
+Get_Setting(getgenv()['MyName'])
+
+_G.Setting_table.Key = _G.wl_key
+Update_Setting(getgenv()['MyName'])
+
+if type(_G.Setting_table.Weapon) ~= 'string' then
+	for i2,v2 in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do  
+		if tostring(v2.ToolTip) == "Melee" then
+			_G.Setting_table.Weapon = v2.Name
+		end
+	end
+end
+
+
 
 
 if game:GetService("CoreGui"):FindFirstChild("SOME X GUI") then
@@ -2530,6 +2603,7 @@ function click()
 end
 
 
+
  function TP(P)
    local Distance = (P.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude -- จุดที่จะไป Position Only
    local Speed = 300 -- ความเร็วของมึง
@@ -2541,7 +2615,11 @@ end
 
 
 
-Main:Toggle("Auto Farm Level",false,function(t)
+Main:Toggle("Auto Farm Level",_G.Setting_table.AutoFarm,false,function(vu)
+Auto_Farm = vu
+
+Update_Setting(getgenv()['MyName'])
+
 	do
     local NM = game:GetService("Workspace"):FindFirstChild("Noclip")
     if NM then
@@ -2557,8 +2635,8 @@ local Noclip = Instance.new("Part",workspace)
 function Noclip()
 game:GetService("Workspace"):FindFirstChild("Noclip").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-5,0)
 end
-_G.AutoFarmLevel = t
-while _G.AutoFarmLevel do wait(.1)
+_G.Setting_table.AutoFarm = vu
+while _G.Setting_table.AutoFarm do wait(.1)
 pcall(function()
 Noclip()
 end)
@@ -2617,7 +2695,7 @@ function EquipWeapon(ToolSe)
 Main:Line()
 
 Main:Toggle("Auto Buso Haki",false,function(t)
-_G.AutoHaki = t
+_G.AutoBusoHaki = t
 end)
 
 
@@ -2676,25 +2754,78 @@ end)
 
 local btns = serv:Channel("Shop","http://www.roblox.com/asset/?id=2161586955")
 
+btns:Label("\                                  \\\\  Fragments //")
 
+btns:Button("Soru (100,000 $)", function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki","Soru")
+end)
+btns:Button("Geppo (10,000 $)", function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki","Geppo")
+end)
 
-btns:Button("Button", function()
-DiscordLib:Notification("Notification", "Button", "Okay!")
+btns:Button("Buso (25,000 $)", function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki","Buso")
+end)
+
+btns:Button("Ken Haki (Level 300),(750,000 $)", function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("KenTalk","Buy")
 end)
 
 
-btns:Button("Button", function()
-SomeLib:Notification("Notification", "Button", "Okay!")
+
+
+btns:Line()
+
+
+
+btns:Label("\                                 \\\\  Fighting Style  //")
+
+btns:Button("Electro", function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyElectro")
 end)
+
+btns:Button("Fishman Karate",function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyFishmanKarate")
+end)
+
+btns:Button("Dragon Claw",function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward","DragonClaw","1")
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward","DragonClaw","2")
+end)
+
+btns:Button("Superhuman",function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuySuperhuman")
+end)
+btns:Button("Death Step",function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyDeathStep")
+end)
+btns:Button("Sharkman Karate",function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuySharkmanKarate",true)
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuySharkmanKarate")
+end)
+btns:Button("Electric Claw", function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyElectricClaw",true)
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyElectricClaw")
+end)
+
+btns:Button("Dragon Talon",function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyDragonTalon",true)
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyDragonTalon")
+end)
+
+btns:Button("Godhuman",function()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyGodhuman",true)
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyGodhuman")
+end)
+
+
 
 local tgls = serv:Channel("Teleport","http://www.roblox.com/asset/?id=6035190846")
 
 
 
 local chec = serv:Channel("Check Item","http://www.roblox.com/asset/?id=6023426909")
-
 chec:Label("soon")
-
 
 local com = serv:Channel("Combat","http://www.roblox.com/asset/?id=6034267998")
 
@@ -2736,6 +2867,72 @@ local args = {
 		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
 end)
 
+misc:Line()
+
+
+misc:Toggle("Anti Afk",false,function(t)
+local VirtualUser=game:service'VirtualUser'
+game:service'Players'.LocalPlayer.Idled:connect(function()
+VirtualUser:CaptureController()
+VirtualUser:ClickButton2(Vector2.new())
+end)
+
+end)
+
+
+
+misc:Line()
+
+
+	local LocalPlayer = game:GetService'Players'.LocalPlayer
+	local originalstam = LocalPlayer.Character.Energy.Value
+	function infinitestam()
+		LocalPlayer.Character.Energy.Changed:connect(function()
+			if InfinitsEnergy then
+				LocalPlayer.Character.Energy.Value = originalstam
+			end 
+		end)
+	end
+	spawn(function()
+		while wait(.1) do
+			if InfinitsEnergy then
+				wait(0.3)
+				originalstam = LocalPlayer.Character.Energy.Value
+				infinitestam()
+			end
+		end
+	end)
+
+nododgecool = false
+	function NoDodgeCool()
+		if nododgecool then
+			for i,v in next, getgc() do
+				if game.Players.LocalPlayer.Character.Dodge then
+					if typeof(v) == "function" and getfenv(v).script == game.Players.LocalPlayer.Character.Dodge then
+						for i2,v2 in next, getupvalues(v) do
+							if tostring(v2) == "0.4" then
+								repeat wait(.1)
+									setupvalue(v,i2,0)
+								until not nododgecool
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+misc:Toggle("Infinity Mink Agility",false,function(infA)
+if infA then
+        local Agility = game:GetService("ReplicatedStorage").FX["Agility"]:Clone()
+        Agility.Parent = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+
+    else
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart["Agility"]:Destroy()
+ 
+    end
+end)
+
 local textbs = serv:Channel("Textboxes","")
 
 textbs:Textbox("Gun power", "Type here!", true, function(t)
@@ -2768,7 +2965,7 @@ end)
 
     spawn(function()
     while wait() do
-        if _G.AutoFarmLevel then
+        if _G.Setting_table.AutoFarm then
             pcall(function()
             CheckQuest()
        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
@@ -2801,7 +2998,7 @@ end)
 
 spawn(function()
     while wait() do
-        if _G.AutoFarmLevel  then
+        if _G.Setting_table.AutoFarm  then
             pcall(function()
             CheckQuest()
     if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
@@ -2842,7 +3039,7 @@ spawn(function()
                             end
                         v.HumanoidRootPart.Size = Vector3.new(60,60,60)
                         v.HumanoidRootPart.CanCaillde = false
-                    until _G.AutoFarmLevel  == false or v.Humanoid.WalkSpeed <= 16
+                    until _G.Setting_table.AutoFarm  == false or v.Humanoid.WalkSpeed <= 16
                     else
                         TP(CFrameMon)
                     end
@@ -2850,9 +3047,9 @@ spawn(function()
                     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest")
                     end
                     if game.Players.LocalPlayer.Character.Humanoid.WalkSpeed <= 16 then
-                        _G.AutoFarmLevel  = false
+                        _G.Setting_table.AutoFarm  = false
                         wait(3)
-                        _G.AutoFarmLevel  = true
+                        _G.Setting_table.AutoFarm  = true
                         end
                 end
                 end
@@ -2866,7 +3063,7 @@ end)
 
 spawn(function()
     game:GetService("RunService").Heartbeat:Connect(function()
-        if _G.AutoFarmLevel  then
+        if _G.Setting_table.AutoFarm  then
         if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid") then
             setfflag("HumanoidParallelRemoveNoPhysics", "False")
             setfflag("HumanoidParallelRemoveNoPhysicsNoSimulate2", "False")
@@ -2880,7 +3077,7 @@ end)
 
 spawn(function()
 		while wait(.1) do
-			if _G.AutoHaki then 
+			if _G.AutoBusoHaki then 
 				if game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
 
 				else
