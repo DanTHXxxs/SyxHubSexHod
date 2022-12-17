@@ -6,77 +6,8 @@ _G.Color = Color3.fromRGB(152, 194, 219)
 
 
 
-_G.Setting_table = {
-    Auto_Farm = false,
-	Auto_Buso = false,
-}
-
-
-_G.Check_Save_Setting = "CheckSaveSetting"
-
-getgenv()['JsonEncode'] = function(msg)
-    return game:GetService("HttpService"):JSONEncode(msg)
-end
-getgenv()['JsonDecode'] = function(msg)
-    return game:GetService("HttpService"):JSONDecode(msg)
-end
-getgenv()['Check_Setting'] = function(Name)
-    if not _G.Dis and not isfolder('Sy x Hub Blox Fruits') then
-        makefolder('Sy x Hub Blox Fruits')
-    end
-    if not _G.Dis and not isfile('Sy x Hub Blox Fruits/'..Name..'.json') then
-        writefile('Sy x Hub Blox Fruits/'..Name..'.json',JsonEncode(_G.Setting_table))
-    end
-end
-getgenv()['Get_Setting'] = function(Name)
-    if not _G.Dis and isfolder('Sy x Hub Blox Fruits') and isfile('Sy x Hub Blox Fruits/'..Name..'.json') then
-        _G.Setting_table = JsonDecode(readfile('Sy x Hub Blox Fruits/'..Name..'.json'))
-        return _G.Setting_table
-	elseif not _G.Dis then
-        Check_Setting(Name)
-    end
-end
-getgenv()['Update_Setting'] = function(Name)
-    if not _G.Dis and isfolder('Sy x Hub Blox Fruits') and isfile('Sy x Hub Blox Fruits/'..Name..'.json') then
-        writefile('Sy x Hub Blox Fruits/'..Name..'.json',JsonEncode(_G.Setting_table))
-	elseif not _G.Dis then
-        Check_Setting(Name)
-    end
-end
-
-Check_Setting(_G.Check_Save_Setting)
-Get_Setting(_G.Check_Save_Setting)
-
-if _G.Setting_table.Save_Member then
-	getgenv()['MyName'] = game.Players.LocalPlayer.Name
-	print("Save Member")
-elseif _G.Setting_table.Save_All_Member then
-	getgenv()['MyName'] = "AllMember"
-	print("Save All Member")
-else
-	getgenv()['MyName'] = "None"
-	_G.Dis = true
-end
-
-Check_Setting(getgenv()['MyName'])
-Get_Setting(getgenv()['MyName'])
-
-_G.Setting_table.Key = _G.wl_key
-Update_Setting(getgenv()['MyName'])
-
-if type(_G.Setting_table.Weapon) ~= 'string' then
-	for i2,v2 in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do  
-		if tostring(v2.ToolTip) == "Melee" then
-			_G.Setting_table.Weapon = v2.Name
-		end
-	end
-end
-
-
-
-
-if game:GetService("CoreGui"):FindFirstChild("SOME X GUI") then
-	game:GetService("CoreGui"):FindFirstChild("SOME X GUI"):Destroy()
+if game:GetService("CoreGui"):FindFirstChild("Sy x Hub") then
+	game:GetService("CoreGui"):FindFirstChild("Sy x Hub"):Destroy()
 end
 
 
@@ -175,7 +106,7 @@ end
 wait(1)
 
 local Discord = Instance.new("ScreenGui")
-Discord.Name = "SOME X GUI"
+Discord.Name = "SyxHub"
 Discord.Parent = game:GetService("CoreGui")
 Discord.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -2206,10 +2137,110 @@ function SomeLib:Window(text,mainclr,cls)
 	return ServerHold
 end
 
+
+
+local SyxHubSEXHOD = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+local ImageButton = Instance.new("ImageButton")
+local UICorner_2 = Instance.new("UICorner")
+
+
+SyxHubSEXHOD.Name = "SyxHubSEXHOD"
+SyxHubSEXHOD.Parent = game:GetService("CoreGui")
+SyxHubSEXHOD.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = SyxHubSEXHOD
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+Frame.Position = UDim2.new(0.0811865702, 0, 0.154321, 0)
+Frame.Size = UDim2.new(0.0921155363, 0, 0.118518516, 0)
+
+UICorner.Parent = Frame
+
+UIAspectRatioConstraint.Parent = Frame
+UIAspectRatioConstraint.AspectRatio = 1.229
+
+ImageButton.Parent = Frame
+ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton.Position = UDim2.new(0.135593221, 0, 0.114583328, 0)
+ImageButton.Size = UDim2.new(0.720339, 0, 0.760416687, 0)
+ImageButton.Image = "http://www.roblox.com/asset/?id=11842149042"
+
+ImageButton.MouseButton1Click:Connect(function ()
+	game.CoreGui:FindFirstChild("SyxHub").Enabled = not game.CoreGui:FindFirstChild("SyxHub").Enabled 
+end)
+
+UICorner_2.Parent = ImageButton
+
+
+
+local function XROZIT_fake_script() 
+	local script = Instance.new('LocalScript', Frame)
+
+	
+	
+	script.Parent.Visible = false 
+	
+	
+	uis = game:GetService("UserInputService")
+	ismobile = uis.TouchEnabled 
+	
+	script.Parent.Visible = ismobile 
+	
+end
+coroutine.wrap(XROZIT_fake_script)()
+local function WSTFC_fake_script() -- Frame.Draggable GUI 
+	local script = Instance.new('LocalScript', Frame)
+
+	local UserInputService = game:GetService("UserInputService")
+	
+	local gui = script.Parent
+	
+	local dragging
+	local dragInput
+	local dragStart
+	local startPos
+	
+	local function update(input)
+		local delta = input.Position - dragStart
+		gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+	
+	gui.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = gui.Position
+			
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+	
+	gui.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+	
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput and dragging then
+			update(input)
+		end
+	end)
+end
+coroutine.wrap(WSTFC_fake_script)()
+
+
+
 function CheckQuest()
 	local Lv = game.Players.LocalPlayer.Data.Level.Value
 
-		if Lv == 1 or Lv <= 9 then -- Bandit
+		if Lv == 1 or Lv <= 10 then -- Bandit
 			 
 
 			Name = "Bandit [Lv. 5]"
@@ -2221,9 +2252,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(1145, 17, 1634)
 			VectorMon = Vector3.new(1145, 17, 1634)
 
-			CFrameQuest = CFrame.new(1060, 17, 1547)
-			VectorQuest = Vector3.new(1060, 17, 1547)
-		elseif Lv == 10 or Lv <= 14 then -- Monkey
+			CFrameQuest = CFrame.new(1145, 17, 1634)
+			VectorQuest = Vector3.new(1145, 17, 1634)
+		elseif Lv == 10 or Lv == 15 or Lv <= 16 then -- Monkey
 			 
 
 			Name = "Monkey [Lv. 14]"
@@ -2235,9 +2266,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-1496, 39, 35)
 			VectorMon = Vector3.new(-1496, 39, 35)
 
-			CFrameQuest = CFrame.new(-1602, 37, 152)
-			VectorQuest = Vector3.new(-1602, 37, 152)
-		elseif Lv == 15 or Lv <= 29 then -- Gorilla
+			CFrameQuest = CFrame.new(-1496, 39, 35)
+			VectorQuest = Vector3.new(-1496, 39, 35)
+		elseif Lv == 16 or Lv <= 30 then -- Gorilla
 			 
 
 			Name = "Gorilla [Lv. 20]"
@@ -2251,7 +2282,7 @@ function CheckQuest()
 
 			CFrameQuest = CFrame.new(-1237, 6, -486)
 			VectorQuest = Vector3.new(-1237, 6, -486)
-		elseif Lv == 30 or Lv <= 39 then -- Pirate
+		elseif Lv == 31 or Lv <= 40 then -- Pirate
 			 
 
 			Name = "Pirate [Lv. 35]"
@@ -2263,9 +2294,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-1115, 14, 3938)
 			VectorMon = Vector3.new(-1115, 14, 3938)
 
-			CFrameQuest = CFrame.new(-1140, 5, 3828)
-			VectorQuest = Vector3.new(-1140, 5, 3828)
-		elseif Lv == 40 or Lv <= 59 then -- Brute
+			CFrameQuest = CFrame.new(-1115, 14, 3938)
+			VectorQuest = Vector3.new(-1115, 14, 3938)
+		elseif Lv == 41 or Lv <= 60 then -- Brute
 			 
 
 			Name = "Brute [Lv. 45]"
@@ -2277,9 +2308,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-1145, 15, 4350)
 			VectorMon = Vector3.new(-1146, 15, 4350)
 
-			CFrameQuest = CFrame.new(-1140, 5, 3828)
-			VectorQuest = Vector3.new(-1140, 5, 3828)
-		elseif Lv == 60 or Lv <= 74 then -- Desert Bandit
+			CFrameQuest = CFrame.new(-1145, 15, 4350)
+			VectorQuest = Vector3.new(-1145, 15, 4350)
+		elseif Lv == 61 or Lv <= 74 then -- Desert Bandit
 			 
 
 			Name = "Desert Bandit [Lv. 60]"
@@ -2291,9 +2322,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(932, 7, 4484)
 			VectorMon = Vector3.new(932, 7, 4484)
 
-			CFrameQuest = CFrame.new(897, 7, 4388)
-			VectorQuest = Vector3.new(897, 7, 4388)
-		elseif Lv == 75 or Lv <= 89 then -- Desert Officre
+			CFrameQuest = CFrame.new(932, 7, 4484)
+			VectorQuest = Vector3.new(932, 7, 4484)
+		elseif Lv == 76 or Lv <= 90 then -- Desert Officre
 			 
 
 			Name = "Desert Officer [Lv. 70]"
@@ -2307,7 +2338,7 @@ function CheckQuest()
 
 			CFrameQuest = CFrame.new(1572, 10, 4373)
 			VectorQuest = Vector3.new(1572, 10, 4373)
-		elseif Lv == 90 or Lv <= 99 then -- Snow Bandits
+		elseif Lv == 91 or Lv <= 100 then -- Snow Bandits
 			 
 
 			Name = "Snow Bandit [Lv. 90]"
@@ -2319,9 +2350,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(1289, 150, -1442)
 			VectorMon = Vector3.new(1289, 106, -1442)
 
-			CFrameQuest = CFrame.new(1386, 87, -1297)
-			VectorQuest = Vector3.new(1386, 87, -1297)
-		elseif Lv == 100 or Lv <= 119 then -- Snowman
+			CFrameQuest = CFrame.new(1289, 150, -1442)
+			VectorQuest = Vector3.new(1289, 150, -1442)
+		elseif Lv == 101 or Lv <= 120 then -- Snowman
 			 
 
 			Name = "Snowman [Lv. 100]"
@@ -2333,9 +2364,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(1289, 150, -1442)
 			VectorMon = Vector3.new(1289, 106, -1442)
 
-			CFrameQuest = CFrame.new(1386, 87, -1297)
-			VectorQuest = Vector3.new(1386, 87, -1297)
-		elseif Lv == 120 or Lv <= 149 then -- Chief Petty Officer
+			CFrameQuest = CFrame.new(1289, 150, -1442)
+			VectorQuest = Vector3.new(1289, 150, -1442)
+		elseif Lv == 121 or Lv <= 150 then -- Chief Petty Officer
 			 
 
 			Name = "Chief Petty Officer [Lv. 120]"
@@ -2347,9 +2378,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-4855, 23, 4308)
 			VectorMon = Vector3.new(-4855, 23, 4308)
 
-			CFrameQuest = CFrame.new(-5036, 29, 4325)
-			VectorQuest = Vector3.new(-5036, 29, 4325)
-		elseif Lv == 150 or Lv <= 174 then -- Sky Bandit
+			CFrameQuest = CFrame.new(-4855, 23, 4308)
+			VectorQuest = Vector3.new(-4855, 23, 4308)
+		elseif Lv == 151 or Lv == 152 or Lv <= 175 then -- Sky Bandit
 			 
 
 			Name = "Sky Bandit [Lv. 150]"
@@ -2361,9 +2392,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-4981, 278, -2830)
 			VectorMon = Vector3.new(-4981, 278, -2830)
 
-			CFrameQuest = CFrame.new(-4842, 718, -2623)
-			VectorQuest = Vector3.new(-4842, 718, -2623)
-		elseif Lv == 175 or Lv <= 189 then -- Dark Master
+			CFrameQuest = CFrame.new(-4981, 278, -2830)
+			VectorQuest = Vector3.new(-4981, 278, -2830)
+		elseif Lv == 176 or Lv <= 190 then -- Dark Master
 			 
 			Name = "Dark Master [Lv. 175]"
 			NameQuest = "SkyQuest"
@@ -2374,9 +2405,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-5250, 389, -2272)
 			VectorMon = Vector3.new(-5250, 389, -2272)
 
-			CFrameQuest = CFrame.new(-4842, 718, -2623)
-			VectorQuest = Vector3.new(-4842, 718, -2623)
-		elseif Lv == 190 or Lv <= 209 then -- Dark Master
+			CFrameQuest = CFrame.new(-5250, 389, -2272)
+			VectorQuest = Vector3.new(-5250, 389, -2272)
+		elseif Lv == 191 or Lv <= 210 then -- Dark Master
 			 
 
 			Name = "Prisoner [Lv. 190]"
@@ -2388,9 +2419,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(5411, 96, 690)
 			VectorMon = Vector3.new(5411, 96, 690)
 
-			CFrameQuest = CFrame.new(5308, 2, 474)
-			VectorQuest = Vector3.new(5308, 2, 474)
-		elseif Lv == 210 or Lv <= 249 then -- Dark Master
+			CFrameQuest = CFrame.new(5411, 96, 690)
+			VectorQuest = Vector3.new(5411, 96, 690)
+		elseif Lv == 211 or Lv <= 250 then -- Dark Master
 			 
 
 			Name = "Dangerous Prisoner [Lv. 210]"
@@ -2402,9 +2433,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(5411, 96, 690)
 			VectorMon = Vector3.new(5411, 96, 690)
 
-			CFrameQuest = CFrame.new(5308, 2, 474)
-			VectorQuest = Vector3.new(5308, 2, 474)
-		elseif Lv == 250 or Lv <= 299 then -- Toga Warrior
+			CFrameQuest = CFrame.new(5411, 96, 690)
+			VectorQuest = Vector3.new(5411, 96, 690)
+		elseif Lv == 251 or Lv <= 300 then -- Toga Warrior
 			 
 
 			Name = "Toga Warrior [Lv. 250]"
@@ -2416,9 +2447,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-1824, 50, -2743)
 			VectorMon = Vector3.new(-1824, 50, -2743)
 
-			CFrameQuest = CFrame.new(-1576, 8, -2985)
-			VectorQuest = Vector3.new(-1576, 8, -2985)
-		elseif Lv == 300 or Lv <= 329 then -- Military Soldier
+			CFrameQuest = CFrame.new(-1824, 50, -2743)
+			VectorQuest = Vector3.new(-1824, 50, -2743)
+		elseif Lv == 301 or Lv <= 330 then -- Military Soldier
 			 
 
 			Name = "Military Soldier [Lv. 300]"
@@ -2430,9 +2461,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-5408, 11, 8447)
 			VectorMon = Vector3.new(-5408, 11, 8447)
 
-			CFrameQuest = CFrame.new(-5316, 12, 8517)
-			VectorQuest = Vector3.new(-5316, 12, 8517)
-		elseif Lv == 330 or Lv <= 374 then -- Military Spy
+			CFrameQuest = CFrame.new(-5408, 11, 8447)
+			VectorQuest = Vector3.new(-5408, 11, 8447)
+		elseif Lv == 331 or Lv <= 375 then -- Military Spy
 			 
 
 			Name = "Military Spy [Lv. 325]"
@@ -2444,9 +2475,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-5815, 84, 8820)
 			VectorMon = Vector3.new(-5815, 84, 8820)
 
-			CFrameQuest = CFrame.new(-5316, 12, 8517)
-			VectorQuest = Vector3.new(-5316, 12, 8517)
-		elseif Lv == 375 or Lv <= 399 then -- Fishman Warrior
+			CFrameQuest = CFrame.new(-5815, 84, 8820)
+			VectorQuest = Vector3.new(-5815, 84, 8820)
+		elseif Lv == 376 or Lv <= 400 then -- Fishman Warrior
 			 
 
 			Name = "Fishman Warrior [Lv. 375]"
@@ -2458,9 +2489,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(60859, 19, 1501)
 			VectorMon = Vector3.new(60859, 19, 1501)
 
-			CFrameQuest = CFrame.new(61123, 19, 1569)
-			VectorQuest = Vector3.new(61123, 19, 1569)
-		elseif Lv == 400 or Lv <= 449 then -- Fishman Commando
+			CFrameQuest = CFrame.new(60859, 19, 1501)
+			VectorQuest = Vector3.new(60859, 19, 1501)
+		elseif Lv == 401 or Lv <= 450 then -- Fishman Commando
 			 
 
 			Name = "Fishman Commando [Lv. 400]"
@@ -2472,9 +2503,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(61891, 19, 1470)
 			VectorMon = Vector3.new(61891, 19, 1470)
 
-			CFrameQuest = CFrame.new(61123, 19, 1569)
-			VectorQuest = Vector3.new(61123, 19, 1569)
-		elseif Lv == 450 or Lv <= 474 then -- God's Guards
+			CFrameQuest = CFrame.new(61891, 19, 1470)
+			VectorQuest = Vector3.new(61891, 19, 1470)
+		elseif Lv == 451 or Lv <= 475 then -- God's Guards
 			 
 
 			Name = "God's Guard [Lv. 450]"
@@ -2486,9 +2517,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-4698, 845, -1912)
 			VectorMon = Vector3.new(-4698, 845, -1912)
 
-			CFrameQuest = CFrame.new(-4722, 845, -1954)
-			VectorQuest = Vector3.new(-4722, 846, -1954)
-		elseif Lv == 475 or Lv <= 524 then -- Shandas
+			CFrameQuest = CFrame.new(-4698, 845, -1912)
+			VectorQuest = Vector3.new(-4698, 845, -1912)
+		elseif Lv == 476 or Lv <= 525 then -- Shandas
 			 
 
 			Name = "Shanda [Lv. 475]"
@@ -2500,9 +2531,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-7685, 5567, -502)
 			VectorMon = Vector3.new(-7685, 5567, -502)
 
-			CFrameQuest = CFrame.new(-7862, 5546, -380)
-			VectorQuest = Vector3.new(-7862, 5546, -380)
-		elseif Lv == 525 or Lv <= 549 then -- Royal Squad
+			CFrameQuest = CFrame.new(-7685, 5567, -502)
+			VectorQuest = Vector3.new(-7685, 5567, -502)
+		elseif Lv == 526 or Lv <= 550 then -- Royal Squad
 			 
 
 			Name = "Royal Squad [Lv. 525]"
@@ -2514,9 +2545,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-7670, 5607, -1460)
 			VectorMon = Vector3.new(-7670, 5607, -1460)
 
-			CFrameQuest = CFrame.new(-7904, 5636, -1412)
-			VectorQuest = Vector3.new(-7904, 5636, -1412)
-		elseif Lv == 550 or Lv <= 624 then -- Royal Soldier
+			CFrameQuest = CFrame.new(-7670, 5607, -1460)
+			VectorQuest = Vector3.new(-7670, 5607, -1460)
+		elseif Lv == 551 or Lv <= 625 then -- Royal Soldier
 			 
 
 			Name = "Royal Soldier [Lv. 550]"
@@ -2528,9 +2559,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(-7828, 5607, -1744)
 			VectorMon = Vector3.new(-7828, 5607, -1744)
 
-			CFrameQuest = CFrame.new(-7904, 5636, -1412)
-			VectorQuest = Vector3.new(-7904, 5636, -1412)
-		elseif Lv == 625 or Lv <= 649 then -- Galley Pirate
+			CFrameQuest = CFrame.new(-7828, 5607, -1744)
+			VectorQuest = Vector3.new(-7828, 5607, -1744)
+		elseif Lv == 626 or Lv <= 650 then -- Galley Pirate
 			 
 
 			Name = "Galley Pirate [Lv. 625]"
@@ -2542,9 +2573,9 @@ function CheckQuest()
 			CFrameMon = CFrame.new(5589, 45, 3996)
 			VectorMon = Vector3.new(5589, 45, 3996)
 
-			CFrameQuest = CFrame.new(5256, 39, 4050)
-			VectorQuest = Vector3.new(5256, 39, 4050)
-		elseif Lv >= 650 then -- Galley Captain
+			CFrameQuest = CFrame.new(5589, 45, 3996)
+			VectorQuest = Vector3.new(5589, 45, 3996)
+		elseif Lv >= 651 then -- Galley Captain
 			 
 			Name = "Galley Captain [Lv. 650]"
 			NameQuest = "FountainQuest"
@@ -2555,8 +2586,8 @@ function CheckQuest()
 			CFrameMon = CFrame.new(5649, 39, 4936)
 			VectorMon = Vector3.new(5649, 39, 4936)
 
-			CFrameQuest = CFrame.new(5256, 39, 4050)
-			VectorQuest = Vector3.new(5256, 39, 4050)
+			CFrameQuest = CFrame.new(5649, 39, 4936)
+			VectorQuest = Vector3.new(5649, 39, 4936)
 		end
 	end
 
@@ -2606,7 +2637,7 @@ end
 
  function TP(P)
    local Distance = (P.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude -- จุดที่จะไป Position Only
-   local Speed = 300 -- ความเร็วของมึง
+   local Speed = 250 -- ความเร็วของมึง
    tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear)
    tween = tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = P})
    tween:Play()
@@ -2615,10 +2646,9 @@ end
 
 
 
-Main:Toggle("Auto Farm Level",_G.Setting_table.AutoFarm,false,function(vu)
-Auto_Farm = vu
+Main:Toggle("Auto Farm Level",false,function(vu)
 
-Update_Setting(getgenv()['MyName'])
+
 
 	do
     local NM = game:GetService("Workspace"):FindFirstChild("Noclip")
@@ -2635,13 +2665,19 @@ local Noclip = Instance.new("Part",workspace)
 function Noclip()
 game:GetService("Workspace"):FindFirstChild("Noclip").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-5,0)
 end
-_G.Setting_table.AutoFarm = vu
-while _G.Setting_table.AutoFarm do wait(.1)
+_G.AutoFarmLevel = vu
+while _G.AutoFarmLevel do wait(.1)
 pcall(function()
 Noclip()
 end)
 end 
 end)
+
+
+Main:Toggle("Fast Attack",false,function(t)
+_G.Normal_Fast_Attack = t
+end)
+
 
 
 
@@ -2691,6 +2727,10 @@ function EquipWeapon(ToolSe)
 			end
 		end)
 	end
+
+
+
+
 
 Main:Line()
 
@@ -2879,6 +2919,11 @@ end)
 
 end)
 
+misc:Toggle("Hide Button Open/Close",false,function(t)
+game:GetService("CoreGui").SyxHubSEXHOD.Frame.Visible = t
+end)
+
+
 
 
 misc:Line()
@@ -2903,7 +2948,45 @@ misc:Line()
 		end
 	end)
 
-nododgecool = false
+
+misc:Toggle("Infinity Agility",false,function(infA)
+if infA then
+        local Agility = game:GetService("ReplicatedStorage").FX["Agility"]:Clone()
+        Agility.Parent = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+
+    else
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart["Agility"]:Destroy()
+ 
+    end
+end)
+
+
+misc:Toggle("Infinity Energy (Fake)",false,function(infA)
+InfinitsEnergy = infA
+
+if infA then
+     infinitestam()
+ 
+    end
+end)
+
+
+
+
+misc:Toggle("Dodge No Cooldown",false,function(vu)
+	nododgecool = vu
+    if vu then
+        NoDodgeCool()
+    end
+end)
+
+	
+		            
+
+
+                             
+
+
 	function NoDodgeCool()
 		if nododgecool then
 			for i,v in next, getgc() do
@@ -2911,7 +2994,7 @@ nododgecool = false
 					if typeof(v) == "function" and getfenv(v).script == game.Players.LocalPlayer.Character.Dodge then
 						for i2,v2 in next, getupvalues(v) do
 							if tostring(v2) == "0.4" then
-								repeat wait(.1)
+								repeat wait(.01)
 									setupvalue(v,i2,0)
 								until not nododgecool
 							end
@@ -2922,16 +3005,61 @@ nododgecool = false
 		end
 	end
 
-misc:Toggle("Infinity Mink Agility",false,function(infA)
-if infA then
-        local Agility = game:GetService("ReplicatedStorage").FX["Agility"]:Clone()
-        Agility.Parent = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
 
-    else
-        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart["Agility"]:Destroy()
- 
-    end
+
+              
+
+misc:Toggle("Walk On Water",false,function(gg)
+game:GetService("Workspace")["_WorldOrigin"]["Foam;"].CanCollide = gg
 end)
+
+	
+misc:Line()
+
+	misc:Label("\                           \\\\  Auto Farm Level Lock  //")
+	_G.LockLevelValue = 2400
+	OldLevel = game.Players.localPlayer.Data.Level.Value
+	misc:Slider("Lock",1,_G.LockLevelValue,_G.LockLevelValue,function(value)
+		_G.LockLevelValue = value
+	end)
+	misc:Toggle("Level",false,function(value)
+		_G.LockLevel = value
+	end)
+	spawn(function()
+		while wait(.1) do
+			if _G.LockLevel then
+				if game.Players.localPlayer.Data.Level.Value >= _G.LockLevelValue then
+					game.Players.localPlayer:Kick("การฟามเสร็จสิ้นแล้ว")
+				end
+			end
+		end
+	end)
+
+	misc:Toggle("Stop Farm Level",false,function(value)
+		_G.LockLevelStopFarm = value
+	end)
+	spawn(function()
+		while wait(.1) do
+			if _G.LockLevelStopFarm then
+				if game.Players.localPlayer.Data.Level.Value >= _G.LockLevelValue then
+					_G.AutoFarmLevel = false
+					if _G.LockLevelStopFarm == false then
+						return
+					end
+				end
+			end
+		end
+	end)
+
+	spawn(function()
+		while wait(.1) do
+			if AuctoClick then
+				Click()
+			end
+		end
+	end)
+
+misc:Line()
 
 local textbs = serv:Channel("Textboxes","")
 
@@ -2965,7 +3093,7 @@ end)
 
     spawn(function()
     while wait() do
-        if _G.Setting_table.AutoFarm then
+        if _G.AutoFarmLevel then
             pcall(function()
             CheckQuest()
        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
@@ -2998,7 +3126,7 @@ end)
 
 spawn(function()
     while wait() do
-        if _G.Setting_table.AutoFarm  then
+        if _G.AutoFarmLevel  then
             pcall(function()
             CheckQuest()
     if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
@@ -3039,7 +3167,7 @@ spawn(function()
                             end
                         v.HumanoidRootPart.Size = Vector3.new(60,60,60)
                         v.HumanoidRootPart.CanCaillde = false
-                    until _G.Setting_table.AutoFarm  == false or v.Humanoid.WalkSpeed <= 16
+                    until _G.AutoFarmLevel  == false or v.Humanoid.WalkSpeed <= 16
                     else
                         TP(CFrameMon)
                     end
@@ -3047,9 +3175,9 @@ spawn(function()
                     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest")
                     end
                     if game.Players.LocalPlayer.Character.Humanoid.WalkSpeed <= 16 then
-                        _G.Setting_table.AutoFarm  = false
+                        _G.AutoFarmLevel  = false
                         wait(3)
-                        _G.Setting_table.AutoFarm  = true
+                        _G.AutoFarmLevel  = true
                         end
                 end
                 end
@@ -3063,7 +3191,7 @@ end)
 
 spawn(function()
     game:GetService("RunService").Heartbeat:Connect(function()
-        if _G.Setting_table.AutoFarm  then
+        if _G.AutoFarmLevel  then
         if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid") then
             setfflag("HumanoidParallelRemoveNoPhysics", "False")
             setfflag("HumanoidParallelRemoveNoPhysicsNoSimulate2", "False")
@@ -3102,4 +3230,36 @@ spawn(function()
 		end
 	end)
 
+
+
+local CameraShaker = require(game.ReplicatedStorage.Util.CameraShaker)
+for i,v in pairs(getreg()) do
+    if typeof(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework then
+        for x,w in pairs(debug.getupvalues(v)) do
+             if typeof(w) == "table" then
+                spawn(function()
+                    game:GetService("RunService").RenderStepped:Connect(function()
+                        if _G.Normal_Fast_Attack then
+                            pcall(function()
+								if game.Players.LocalPlayer.Character:FindFirstChild("Combat") or game.Players.LocalPlayer.Character:FindFirstChild("Black Leg") or game.Players.LocalPlayer.Character:FindFirstChild("Electro") or game.Players.LocalPlayer.Character:FindFirstChild("Fishman Karate") or game.Players.LocalPlayer.Character:FindFirstChild("Dragon Claw") or game.Players.LocalPlayer.Character:FindFirstChild("Superhuman") or game.Players.LocalPlayer.Character:FindFirstChild("Sharkman Karate") then
+									w.activeController.increment = 3
+								else
+									w.activeController.increment = 4
+								end             
+                                CameraShaker:Stop()
+                                w.activeController.timeToNextAttack = -(math.huge^math.huge^math.huge)
+                                w.activeController.attacking = false
+								w.activeController.timeToNextBlock = 0
+                                w.activeController.blocking = false                            
+                                w.activeController.hitboxMagnitude = 50
+    		                    w.activeController.humanoid.AutoRotate = true
+    	                      	w.activeController.focusStart = 0
+                            end)
+                        end
+                    end)
+                end)
+            end
+        end
+    end
+end
 
