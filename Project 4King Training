@@ -1,0 +1,142 @@
+
+if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
+	game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
+end
+
+
+local repo = 'https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/'
+
+local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
+local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+
+local Window = Library:CreateWindow({
+
+    Title = 'Sy x Hub | Project 4King Training ',
+    Center = true, 
+    AutoShow = true,
+})
+
+
+local Tabs = {
+    
+    Main = Window:AddTab('General'), 
+    ['UI Settings'] = Window:AddTab('Settings'),
+}
+
+
+local LeftGroupBox = Tabs.Main:AddLeftGroupbox('Main')
+
+
+
+LeftGroupBox:AddLabel('🔥 อ่าน 🔥')
+
+LeftGroupBox:AddLabel('มึงต้องเข้าทีมFarmก่อนแล้วค่อยกด Auto Farm')
+
+
+LeftGroupBox:AddToggle('gazzz', {
+    Text = '⚡ Auto Farm Pikachu',
+    Default = false,
+ 
+})
+
+
+Toggles.gazzz:OnChanged(function(valuex)
+   
+   xx = valuex
+   
+   while xx do
+       wait()
+        if xx then
+       game:GetService("VirtualInputManager"):SendKeyEvent(true,"E",false,game)
+       for _,obj in next, game.Players.LocalPlayer.Backpack:GetChildren() do
+if obj.Name == "Basket" then
+local equip = game.Players.LocalPlayer.Backpack.Basket
+equip.Parent = game.Players.LocalPlayer.Character
+end
+end
+       else
+           game:GetService("VirtualInputManager"):SendKeyEvent(false,"E",false,game)
+
+end
+
+   
+   end
+end)
+
+
+LeftGroupBox:AddToggle('gazzz', {
+    Text = '⛏ Auto Farm Mine',
+    Default = false,
+ 
+})
+
+
+Toggles.gazzz:OnChanged(function(valuex)
+   
+   xx = valuex
+   
+   while xx do
+       wait()
+        if xx then
+       game:GetService("VirtualInputManager"):SendKeyEvent(true,"E",false,game)
+       for _,obj in next, game.Players.LocalPlayer.Backpack:GetChildren() do
+if obj.Name == "Pickaxe" then
+local equip = game.Players.LocalPlayer.Backpack.Pickaxe
+equip.Parent = game.Players.LocalPlayer.Character
+end
+end
+       else
+           game:GetService("VirtualInputManager"):SendKeyEvent(false,"E",false,game)
+
+end
+
+   
+   end
+end)
+
+
+
+
+
+
+Library:OnUnload(function()
+    print('Unloaded!')
+    Library.Unloaded = true
+end)
+
+
+local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
+
+
+MenuGroup:AddButton('Unload', function() Library:Unload() end)
+MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'F4', NoUI = true, Text = 'Menu keybind' }) 
+
+Library.ToggleKeybind = Options.MenuKeybind
+
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+SaveManager:IgnoreThemeSettings() 
+
+
+SaveManager:SetIgnoreIndexes({ 'MenuKeybind' }) 
+
+
+ThemeManager:SetFolder('MyScriptHub')
+
+SaveManager:BuildConfigSection(Tabs['UI Settings']) 
+
+ThemeManager:ApplyToTab(Tabs['UI Settings'])
+
+
+while true do
+    wait()
+if isfolder("LinoriaLibSettings") then
+    delfolder("LinoriaLibSettings")
+end
+
+if   isfolder("MyScriptHub") then
+    delfolder("MyScriptHub")
+end
+end
