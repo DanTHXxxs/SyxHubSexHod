@@ -68,24 +68,91 @@ local GOP = Tabs.Main:AddLeftTabbox()
 local TP1 = GOP:AddTab('Teleport')
 local TP2 = GOP:AddTab('Teleport Team')
 
+
 ohoh:AddToggle('gazzz', {
-    Text = '🦶 Jump No Cooldown',
-    Default = _G.aa,
+    Text = 'Chat Logs',
+    Default = _G.fs,
  
 })
 
 
 Toggles.gazzz:OnChanged(function(z)
    if z then
+local Players, SGui = game:GetService("Players"), game:GetService("StarterGui");
+local Client, NColor3, UD, UD2 = Players.LocalPlayer, Color3.new, UDim.new, UDim2.new
+
+local function ChatSpy()
+   local ChatSpyFrame = Client.PlayerGui.Chat.Frame
+   ChatSpyFrame.ChatChannelParentFrame.Visible = true
+   ChatSpyFrame.ChatBarParentFrame.Position = ChatSpyFrame.ChatChannelParentFrame.Position + UD2(UD(), ChatSpyFrame.ChatChannelParentFrame.Size.Y)
+end 
+ChatSpy()
 
        else
+local Players, SGui = game:GetService("Players"), game:GetService("StarterGui");
+local Client, NColor3, UD, UD2 = Players.LocalPlayer, Color3.new, UDim.new, UDim2.new
+
+local function ChatSpy()
+   local ChatSpyFrame = Client.PlayerGui.Chat.Frame
+   ChatSpyFrame.ChatChannelParentFrame.Visible = false
+   ChatSpyFrame.ChatBarParentFrame.Position = ChatSpyFrame.ChatChannelParentFrame.Position + UD2(UD(), ChatSpyFrame.ChatChannelParentFrame.Size.Y)
+end 
+ChatSpy()
+
+ end
+end)
+
+ohoh:AddToggle('gazzz', {
+    Text = 'Teleport UI',
+    Default = _G.fs,
  
+})
+
+
+Toggles.gazzz:OnChanged(function(z)
+   if z then
+game.Players.LocalPlayer.PlayerGui.TeleportUI.Enabled = true
+       else
+game.Players.LocalPlayer.PlayerGui.TeleportUI.Enabled = false
  end
 end)
 
 
 ohoh:AddToggle('gazzz', {
-    Text = '🛌 Anti Afk',
+    Text = 'Specter',
+    Default = _G.fs,
+ 
+})
+
+
+Toggles.gazzz:OnChanged(function(z)
+   if z then
+game.Players.LocalPlayer.PlayerGui.Specter.Frame.Visible = true
+       else
+game.Players.LocalPlayer.PlayerGui.Specter.Frame.Visible = false
+ end
+end)
+
+ohoh:AddToggle('gazzz', {
+    Text = 'Jump No Cooldown',
+   Default = false, 
+ 
+})
+
+
+Toggles.gazzz:OnChanged(function(z)
+   if z then
+game.Players.LocalPlayer.PlayerGui.JumpCooldown:Destroy()
+
+       else
+ game.Players.LocalPlayer.Character.Head:Destroy()
+
+ end
+end)
+
+
+ohoh:AddToggle('gazzz', {
+    Text = 'Anti Afk',
     Default = _G.zzz,
  
 })
