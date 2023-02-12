@@ -68,19 +68,36 @@ local TP1 = GOP:AddTab('Teleport')
 local TP2 = GOP:AddTab('Teleport Team')
 
 
-local MyButton = TP1:AddButton('Lobby', function()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6831.67285, 55621.0156, -3088.8374, -0.99724102, -4.24568825e-08, -0.0742313713, -3.94549353e-08, 1, -4.1906798e-08, 0.0742313713, -3.88623853e-08, -0.99724102)
+
+
+
+
+local xx = TP1:AddButton('Lobby', function()
+       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6831.67285, 55621.0156, -3088.8374, -0.99724102, -4.24568825e-08, -0.0742313713, -3.94549353e-08, 1, -4.1906798e-08, 0.0742313713, -3.88623853e-08, -0.99724102)
 
 
 end)
 
-local MyButton = TP1:AddButton('Farm', function()
+
+local MyButton2 = xx:AddButton('Farm', function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(420.922363, 263.645905, 15342.7686, 0.985526383, 1.1715855e-08, 0.169522196, 2.85167578e-09, 1, -8.56894076e-08, -0.169522196, 8.49325943e-08, 0.985526383)
 end)
+
+TP1:AddDivider()
 
 local MyButton = TP1:AddButton('Dome', function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6709.51465, 52818.0898, -18364.4688, 1, 0, 0, 0, 1, 0, 0, 0, 1)
 end)
+
+local MyButton = TP1:AddButton('Airport', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(995.356, 367.441, -1736.877)
+end)
+
+local MyButton = TP1:AddButton('Desert', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(30292.539, 391.625, -3861.83)
+end)
+
+
 
 local MyButton = TP2:AddButton('Team A', function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(661.632874, 363.527161, -2471.69897, 0.989777505, 6.55233166e-08, 0.142620102, -6.77034961e-08, 1, 1.04338556e-08, -0.142620102, -1.99830748e-08, 0.989777505)
@@ -89,6 +106,9 @@ end)
 local MyButton = TP2:AddButton('Team B', function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(650.941223, 363.526733, -965.921875, 1, 0, 0, 0, 1, 0, 0, 0, 1)
 end)
+
+TP2:AddDivider()
+
 
 local MyButton = TP2:AddButton('Team D', function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(29995.7109, 383.553406, -3992.85474, 1, 0, 0, 0, 1, 0, 0, 0, 1)
@@ -318,14 +338,6 @@ local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
 
 MenuGroup:AddButton('Unload', function() Library:Unload() end)
 
-local MyButton = MenuGroup:AddButton('Default Theme', function()
-    
-if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
-	game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/Project%204King%20Training"))()
-
-end
-end)
 
 MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'F4', NoUI = true, Text = 'Menu keybind' }) 
 
