@@ -1,0 +1,171 @@
+
+if game:GetService("CoreGui"):FindFirstChild("Discord") then
+	game:GetService("CoreGui"):FindFirstChild("Discord"):Destroy()
+end
+
+if game:GetService("CoreGui"):FindFirstChild("SyxHubSEXHOD") then
+	game:GetService("CoreGui"):FindFirstChild("SyxHubSEXHOD"):Destroy()
+end
+
+
+local SyxHubSEXHOD = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+local ImageButton = Instance.new("ImageButton")
+local UICorner_2 = Instance.new("UICorner")
+
+
+SyxHubSEXHOD.Name = "SyxHubSEXHOD"
+SyxHubSEXHOD.Parent = game:GetService("CoreGui")
+SyxHubSEXHOD.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = SyxHubSEXHOD
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+Frame.Position = UDim2.new(0.0811865702, 0, 0.154321, 0)
+Frame.Size = UDim2.new(0.0921155363, 0, 0.118518516, 0)
+
+UICorner.Parent = Frame
+
+UIAspectRatioConstraint.Parent = Frame
+UIAspectRatioConstraint.AspectRatio = 1.229
+
+ImageButton.Parent = Frame
+ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton.Position = UDim2.new(0.135593221, 0, 0.114583328, 0)
+ImageButton.Size = UDim2.new(0.720339, 0, 0.760416687, 0)
+ImageButton.Image = "http://www.roblox.com/asset/?id=11842149042"
+
+ImageButton.MouseButton1Click:Connect(function ()
+	game.CoreGui:FindFirstChild("Discord").Enabled = not game.CoreGui:FindFirstChild("Discord").Enabled 
+end)
+
+
+
+local DiscordLib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt")()
+
+local Win1 = DiscordLib:Window("Sy x Hub |  🏆 Race Clicker") 
+
+local Players = game:GetService("Players")
+
+local lp = Players.LocalPlayer
+
+local Tab1 = Win1:Server("General", "http://www.roblox.com/asset/?id=6034287522") 
+local Tab2 = Win1:Server("Setting", "http://www.roblox.com/asset/?id=6031075938") 
+
+
+local Chann1 = Tab1:Channel("Main") 
+local ss = Tab2:Channel("Menu") 
+
+Chann1:Toggle("🏃‍♂️  Auto Race",false, function(bool)
+ getgenv().AutoFinish = bool
+    
+    task.spawn(function()
+        while task.wait() do
+            if AutoFinish then
+                pcall(function()
+                    if lp.PlayerGui.TimerUI.RaceTimer.Visible then
+                        local char = lp.Character
+                        local hum = char.Humanoid
+                        local hrp = char.HumanoidRootPart
+                        
+                        hrp.CFrame = hrp.CFrame + Vector3.new(50000, 0, 0)
+                        task.wait(delay)
+                    end
+                end)
+            end
+        end
+    end)
+end)
+
+
+local delay = Chann1:Slider("⏱ Auto Race Delay", 0, 5, 1, function(value)
+delay = value
+end)
+
+Chann1:Toggle("⚡ Auto Click Speed [ใช้งานได้แค่ตรงจุดเกิดเท่านั้น]",false, function(bool)
+getgenv().AutoClick = bool
+    
+    task.spawn(function()
+        while task.wait() do
+            if AutoClick then
+                if lp.PlayerGui.ClicksUI.ClickHelper.Visible == true then
+                    game:GetService("ReplicatedStorage").Packages.Knit.Services.ClickService.RF.Click:InvokeServer()
+                end
+            end
+        end
+    end)
+end)
+
+
+Chann1:Seperator() 
+
+Chann1:Toggle("🔄 Auto Rebirth",false, function(bool)
+ getgenv().AutoRebirth = bool
+    
+    task.spawn(function()
+        while task.wait() do
+            if AutoRebirth then
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.RebirthService.RF.Rebirth:InvokeServer()
+                task.wait(5)
+            end
+        end
+    end)
+end)
+
+
+
+Chann1:Toggle("💩 Auto Hatch",function(bool)
+    getgenv().AutoHatch = bool
+    
+    task.spawn(function()
+        while task.wait() do
+            if AutoHatch then
+                if choosed_egg then
+                    local args = {[1] = choosed_egg,[2] = "1",[3] = {}}
+                    game:GetService("ReplicatedStorage").Packages.Knit.Services.EggService.RF.Open:InvokeServer(unpack(args))
+                else
+                    warn("Please, choose your egg !")
+                end
+            end
+        end
+    end)
+end)
+
+Chann1:Toggle("👷‍♂️ Auto Craft",function(bool)
+    getgenv().AutoCraft = bool
+    
+    task.spawn(function()
+        while task.wait(3) do
+            if AutoCraft then
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.PetsService.RF.CraftAll:InvokeServer()
+            end
+        end
+    end)
+end)
+
+Chann1:Toggle("🖐Auto Equip",function(bool)
+    getgenv().AutoEquipBest = bool
+    
+    task.spawn(function()
+        while task.wait(3) do
+            if AutoEquipBest then
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.PetsService.RF.EquipBest:InvokeServer()
+            end
+        end
+    end)
+end)
+
+
+Chann1:Button("Redeem Codes",function(Codes)
+    for i,v in (Codes) do
+        local args = {[1] = v}
+        game:GetService("ReplicatedStorage").Packages.Knit.Services.CodesService.RF.Redeem:InvokeServer(unpack(args))
+    end
+end)
+
+Chann1:Seperator() 
+ss:Toggle("Hide Button Open/Close Ui",false,function(t)
+game:GetService("CoreGui").SyxHubSEXHOD.Frame.Visible = t
+end)
+
