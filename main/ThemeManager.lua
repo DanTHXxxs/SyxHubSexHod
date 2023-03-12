@@ -5,8 +5,7 @@ local ThemeManager = {} do
 
 	ThemeManager.Library = nil
 	ThemeManager.BuiltInThemes = {
-		['Default'] 		= { 1, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1c1c1c","AccentColor":"0055ff","BackgroundColor":"141414","OutlineColor":"323232"}') },
-		['Sy x Hub'] 			= { 2,httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1e1e1e","AccentColor":"3e70c6","BackgroundColor":"232323","OutlineColor":"141414"}') },
+		['Sy x Hub'] 			= { 1,httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1e1e1e","AccentColor":"3e70c6","BackgroundColor":"232323","OutlineColor":"141414"}') },
 	}
 
 	function ThemeManager:ApplyTheme(theme)
