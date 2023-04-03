@@ -10,7 +10,6 @@ local ESP = {
 	Names = false,
 	Distance = false,
 	Health = false,
-    Bounty = false,
     Tool = false,
 	TeamColor = true,
 	Thickness = 1.5,
@@ -263,29 +262,6 @@ function boxBase:Update()
             end
 
             if self.Player then
-                if ESP.Bounty then
-                    local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
-
-                    if Vis5 then
-                        self.Components.Bounty.Visible = true
-                        self.Components.Bounty.Position = Vector2.new(TagPos.X, TagPos.Y - 14)
-                        if self.Players.Player.Data.Bounty then
-                            self.Components.Bounty.Text = self.Player.Character:FindFirstChildOfClass("Tool").Value
-                            self.Components.Bounty.Color = ESP.ToolColor
-                        else
-                            self.Components.Bounty.Visible = false
-                        end
-                    else
-                        self.Components.Bounty.Visible = false
-                    end
-                else
-                    self.Components.Bounty.Visible = false
-                end
-            else
-                self.Components.Bounty.Visible = false
-            end
-
-            if self.Player then
                 if ESP.Tool then
                     local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
 
@@ -341,7 +317,6 @@ function boxBase:Update()
             self.Components.Quad.Visible = false
             self.Components.Distance.Visible = false
             self.Components.Health.Visible = false
-            self.Components.Bounty.Visible = false
             self.Components.Tool.Visible = false
             self.Components.Name.Visible = false
             self.Components.Tracer.Visible = false
@@ -400,13 +375,6 @@ function ESP:Add(obj, options)
 		Outline = true,
 		Size = 15,
 		Visible = self.Enabled and self.Health
-	})
-    box.Components["Bounty"] = Draw("Text", {
-		Color = box.Color,
-		Center = true,
-		Outline = true,
-		Size = 15,
-		Visible = self.Enabled and self.Bounty
 	})
     box.Components["Tool"] = Draw("Text", {
 		Color = box.Color,
