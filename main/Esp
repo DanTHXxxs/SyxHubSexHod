@@ -266,14 +266,18 @@ function boxBase:Update()
                 if ESP.Bounty then
                     local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                        if Vis5 then
-                            self.Components.Bounty.Visible = true
-                            self.Components.Bounty.Position = Vector2.new(TagPos.X, TagPos.Y + 17)               
-                            self.Components.Bounty.Text = self.game:GetService("Players").Player.Data.Bounty.Value
+                    if Vis5 then
+                        self.Components.Bounty.Visible = true
+                        self.Components.Bounty.Position = Vector2.new(TagPos.X, TagPos.Y - 14)
+                        if self.Players.Player.Data.Bounty then
+                            self.Components.Bounty.Text = self.Player.Character:FindFirstChildOfClass("Tool").Value
                             self.Components.Bounty.Color = ESP.ToolColor
                         else
-                            self.Components.Bounty.Visible = false     
+                            self.Components.Bounty.Visible = false
                         end
+                    else
+                        self.Components.Bounty.Visible = false
+                    end
                 else
                     self.Components.Bounty.Visible = false
                 end
