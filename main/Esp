@@ -269,7 +269,7 @@ function boxBase:Update()
                         if Vis5 then
                             self.Components.Bounty.Visible = true
                             self.Components.Bounty.Position = Vector2.new(TagPos.X, TagPos.Y + 17)               
-                            self.Components.Bounty.Text = game:GetService("Players").Player.Data.Bounty.Value
+                            self.Components.Bounty.Text = self.game:GetService("Players").Player.Data.Bounty.Value
                             self.Components.Bounty.Color = ESP.ToolColor
                         else
                             self.Components.Bounty.Visible = false     
