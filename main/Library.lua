@@ -1,3 +1,6 @@
+local library = {flags = {}, windows = {}, open = true}
+
+
 local InputService = game:GetService('UserInputService');
 local TextService = game:GetService('TextService');
 local CoreGui = game:GetService('CoreGui');
@@ -25,7 +28,6 @@ getgenv().Options = Options;
 local Library = {
     Registry = {};
     RegistryMap = {};
-       flags = {};
     HudRegistry = {};
 
     FontColor = Color3.fromRGB(255, 255, 255);
