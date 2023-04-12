@@ -1,45 +1,211 @@
-repeat wait() until game:IsLoaded()
-local PlaceId = game.PlaceId
-if PlaceId == 4598019433 then
 
-local repo = 'https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/'
+if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
+	game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
+end
 
-local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
-local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
-local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+
+_G.Respawnsss = false
+_G.Respawns = false
+_G.AutoFarms = false
+_G.AutoFarm = false
+
+getgenv().ScriptPaused = false;
+
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+
+local Player = Players.LocalPlayer
+local Hunger = Player:WaitForChild("stats"):WaitForChild("Hunger")
+local BuyKart = Workspace:WaitForChild("BarbStores"):WaitForChild("FarmKart"):WaitForChild("CustomerSeat")
+local BuyFood = Workspace:WaitForChild("Stores"):WaitForChild("Food"):WaitForChild("CustomerSeats")
+local Karts = Workspace:WaitForChild("Karts")
+local RiceFolder = Workspace:WaitForChild("Rice")
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+
+
+local UserInputService = game:GetService('UserInputService')
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/main/Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/main/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/main/SaveManager.lua"))()
 
 local Window = Library:CreateWindow({
 
-    Title = "[⚪] Sy x Hub | generic roleplay gaem. | " ..os.date("%d ")..os.date("%A ")..os.date("%B ")..os.date("%Y"),0,9356831478,
+    Title = 'Sy x Hub | Generic Roleplay Gaem | '   ..os.date("%d ")..os.date("%A ")..os.date("%B ")..os.date("%Y"),0,9356831478,
     Center = true, 
     AutoShow = true,
 })
 
 
 local Tabs = {
-
-    Main = Window:AddTab('General'),
-	Visuals = Window:AddTab('Visuals'), 
-    ['UI Settings'] = Window:AddTab('UI Settings'),
+    
+    Main = Window:AddTab('General'), 
+    ['UI Settings'] = Window:AddTab('Settings'),
 }
 
 
---Main
-local LeftGroupBox = Tabs.Main:AddLeftGroupbox('\          \\\\ Main //')
-local pVp = Tabs.Main:AddRightGroupbox('\           \\\\ PvP //')
---Visuals
-local bccc = Tabs.Visuals:AddLeftGroupbox('[+]')
+local Mainz = Tabs.Main:AddLeftGroupbox('Main')
+
+
+Mainz:AddToggle('AutoFarm', {
+    Text = 'Auto Farm [FarmKart]',
+    Default = _G.AutoFarms, 
+
+})
+
+
+Toggles.AutoFarm:OnChanged(function(Fs)
+_G.AutoFarm = Fs
+spawn(function()
+while _G.AutoFarm do
+    wait()
+    
+    --// Get Tool \\--
+function GetTool(Name)
+    local Tool = Player.Character and Player.Character:FindFirstChild(Name) or Player.Backpack:FindFirstChild(Name)
+    if Tool and Player.Character and Player.Character.Humanoid then
+        Player.Character.Humanoid:UnequipTools()
+        Player.Character.Humanoid:EquipTool(Tool)
+        task.wait()
+        return Tool
+    end
+end
+
+--// Get Rice \\--
+function GetRice()
+    for _, Rice in next, RiceFolder:GetChildren() do
+        local Model = Rice:FindFirstChildOfClass("Model")
+        if Model and Model.PrimaryPart and Rice:FindFirstChild("Health") and Rice.Health.Value > 0 and Rice:FindFirstChild("Reward") and Rice.Reward.Value > 0 then
+            return Rice, Model.PrimaryPart
+        end
+    end
+end
+
+--// Use Kart \\--
+function UseKart(Kart)
+    if Kart.Name == Player.Name then
+        -- Sickles
+        local Sickles = {Kart:WaitForChild("LeftSickle"), Kart:WaitForChild("RightSickle")}
+        -- Farm Rice
+        while _G.AutoFarm do
+            -- Sit
+            if Kart:FindFirstChild("VehicleSeat") and Kart.VehicleSeat.Occupant ~= Player.Character.Humanoid then
+                Kart.VehicleSeat:Sit(Player.Character.Humanoid)
+            end
+            -- Rice
+            local Rice, Part = GetRice()
+            if Rice and Kart.PrimaryPart then
+                Kart:SetPrimaryPartCFrame(Part.CFrame * CFrame.new(3,3,3))
+                task.wait(0.1);
+                for _, Sickle in next, Sickles do
+                    firetouchinterest(Sickle, Part, 0)
+                    firetouchinterest(Sickle, Part, 1)
+                end
+            end
+        end
+    end
+end
+
+--// Get Kart \\--
+while _G.AutoFarm do
+    if not Karts:FindFirstChild(Player.Name) and not ScriptPaused then
+        local Tool = GetTool("FarmKart")
+        local Humanoid = Player.Character and Player.Character:FindFirstChild("Humanoid")
+        if Humanoid and Humanoid.Health <= 0 then
+            RemoteEvent:FireServer("Respawn")
+        elseif Tool then
+            Tool:Activate()
+        else
+            BuyKart:Sit(Player.Character.Humanoid)
+        end
+    else
+        if Karts:FindFirstChild(Player.Name) then
+            for i,v in pairs(Karts[Player.Name]:GetDescendants()) do
+                if v:IsA("Part") then
+                    v.CanCollide = false;
+                end
+            end
+            UseKart(Karts[Player.Name])
+        end
+    end
+    task.wait(2.3)
+end
+
+end
+end)
+
+end)
+
+Mainz:AddToggle('Auto', {
+    Text = 'Auto Respawn',
+    Default = _G.Respawnsss, 
+
+})
+
+
+Toggles.Auto:OnChanged(function(Fs)
+    
+_G.Respawns = Fs
+while _G.Respawns do
+    wait(1.5)
+game:GetService("ReplicatedStorage").RemoteEvent:FireServer("Respawn")
+   end
+end)
+
+Mainz:AddDivider()
+
+local MyButton = Mainz:AddButton('Sprint (No Auto)', function()
+VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Q, false, game)
+end)
+
+Mainz:AddSlider('Speed', {
+    Text = 'Sprint Speed',
+
+
+    Default = 24,
+    Min = 24,
+    Max = 35,
+    Rounding = 1,
+
+    Compact = false, 
+})
+
+
+Options.Speed:OnChanged(function(sliderSprint)
+   sprintSpeed = sliderSprint
+   
+   UserInputService.InputBegan:Connect(function(inputObject, gameProcessedEvent)
+				
+    
+	local isQHeld = UserInputService:IsKeyDown(Enum.KeyCode.Q)
+
+	
+	
+	if gameProcessedEvent == true then
+		
+		if isQHeld == true then
+			game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = sprintSpeed
+		end
+		
+	
+		
+	end
+
+end)
+end)
 
 
 
 local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
 
 
-MenuGroup:AddButton('Unload', function() Library:Unload() end)
 MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'F4', NoUI = true, Text = 'Menu keybind' }) 
 
-Library.ToggleKeybind = Options.MenuKeybind 
-
+Library.ToggleKeybind = Options.MenuKeybind
 ThemeManager:SetLibrary(Library)
 SaveManager:SetLibrary(Library)
 
@@ -49,9 +215,7 @@ SaveManager:IgnoreThemeSettings()
 SaveManager:SetIgnoreIndexes({ 'MenuKeybind' }) 
 
 
-ThemeManager:SetFolder('Sy x Hub [Save]')
-SaveManager:SetFolder('Sy x Hub [Save]/specific-game')
-
+ThemeManager:SetFolder('MyScriptHub')
 
 SaveManager:BuildConfigSection(Tabs['UI Settings']) 
 
@@ -60,259 +224,3 @@ ThemeManager:ApplyToTab(Tabs['UI Settings'])
 
 
 
-pVp:AddToggle('MyToggle', {
-    Text = 'HitBox [Head Only!!]',
-    Default = false, 
-})
-
-
-_G.Toggle = false
-
-Toggles.MyToggle:OnChanged(function(State)
-  
-doodoo = State
-
-while doodoo do 
-    wait(1)
-      pcall(function()
-       for _, player in next, game:GetService("Players"):GetChildren() do
-        if player.Character and player.Name ~= game.Players.LocalPlayer.Name then
-            if player.Character:FindFirstChild("Head") then
-                player.Character.Head.CanCollide = false
-                player.Character.Head.Size = Vector3.new(head, head, head)
- 
-                if player.Character.Head:FindFirstChild("Mesh") then
-                    player.Character.Head.Mesh:Destroy()
-                end
- 
-                player.Character.Head.Transparency = Transparency
-   end
-        end
-end
-end)
-end
- 
-end)
-
-
-
-pVp:AddSlider('HitbxSlider', {
-    Text = 'Hitbox Radius',
-
-
-    Default = 0,
-    Min = 1.3,
-    Max = 6,
-    Rounding = 1,
-
-    Compact = false, 
-})
-
-local Number = Options.HitbxSlider.Value
-Options.HitbxSlider:OnChanged(function(Value)
-  head = Value
-end)
-
-Options.HitbxSlider:SetValue(1.3)
-
-
-
-pVp:AddSlider('HitbxSlider', {
-    Text = 'Hitbox Transparency',
-
-
-    Default = 0,
-    Min = 0,
-    Max = 1,
-    Rounding = 1,
-
-    Compact = false, 
-})
-
-local Number = Options.HitbxSlider.Value
-Options.HitbxSlider:OnChanged(function(Value)
-  Transparency = Value
-end)
-
-Options.HitbxSlider:SetValue(0)
-
-
-pVp:AddToggle('bbbxx', {
-    Text = 'Auto Click',
-    Default = false, 
-})
-
-
-Toggles.bbbxx:OnChanged(function(hh)
-_G.Autoclickck = hh
-while _G.Autoclickck do 
-	wait(1)
- mouse1click()
-end
-end)
-
-
-
-
-
-getgenv().cham = false 
-getgenv().nameESP = false 
-getgenv().boxESP = false 
-getgenv().esp_loaded = false 
-getgenv().Visibility = false 
-getgenv().useTeamColor = false 
-
-bccc:AddToggle('ESPxx', {
-    Text = 'Esp',
-    Default = getgenv().Visibility, 
-})
-
-
-Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
-  loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().Visibility = m 
-end)
-
-
-
-
-bccc:AddToggle('ESPxx', {
-    Text = 'Box',
-    Default = getgenv().Visibility, 
-})
-
-
-Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
-  loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().boxESP = m 
-end)
-
-
-bccc:AddToggle('ESPxx', {
-    Text = 'Name',
-    Default = getgenv().Visibility, 
-})
-
-
-Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
-   loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().nameESP = m 
-end)
-
-
-
-bccc:AddToggle('ESPxx', {
-    Text = 'Chams',
-    Default = getgenv().Visibility, 
-})
-
-
-Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
-   loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().cham = m 
-end)
-
-
-
-
-bccc:AddToggle('ESPxx', {
-    Text = 'Team Color',
-    Default = false, 
-})
-
-
-Toggles.ESPxx:OnChanged(function(m)  getgenv().useTeamColor = m  
-end)
-
-
-LeftGroupBox:AddToggle('Farm', {
-    Text = 'Auto Farm [FarmKart]',
-    Default = false, 
-})
-
-
-Toggles.Farm:OnChanged(function(ko) 
-
-_G.Star = ko
-while _G.Star do 
-
-
-
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").BarbStores.FarmKart.CustomerSeat.CFrame
-
-wait(7)
-
-
-game.Players.LocalPlayer.Backpack:FindFirstChildOfClass"Tool".Parent = game:GetService("Workspace")[game.Players.LocalPlayer.Name]
-
-wait(0.5)
-
- mouse1click()
-
-wait(2)
-
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Karts[game.Players.LocalPlayer.Name].VehicleSeat.CFrame
-
-
-wait(1)
-
-local ts = game:GetService("TweenService")
-local part = game.Workspace.Karts[game.Players.LocalPlayer.Name].VehicleSeat
-local tp = {CFrame = New_CFrame}
-
-function tp(CFrametp)
-   ts:Create(part, TweenInfo.new((CFrametp.Position - part.Position).magnitude/32, Enum.EasingStyle.Quad), {CFrame = CFrametp.CFrame + Vector3.new(1.5,1.3,1)}):Play()
-end
-
-
-_G.AutoFarm = true
-
-
-while _G.AutoFarm do
-   wait()
-   local closer = 99999
-   for i,v in pairs(game.Workspace.Rice:GetChildren()) do
-       if v and v:FindFirstChild("PhysicalRice") and v:FindFirstChild("Health") and v.PhysicalRice:FindFirstChild("Middle") then
-           local range = (v.PhysicalRice.Middle.Position - game.Workspace.Karts[game.Players.LocalPlayer.Name].VehicleSeat.Position).magnitude
-           if v.Health.Value > 0 then
-               if range < closer then
-               closer = range
-               tp(v.PhysicalRice.Middle)
-               end
-           end
-       end
-   end
-end
-
-wait(inf)
- end
-       
-end)
-
-
-LeftGroupBox:AddToggle('AFK', {
-    Text = 'Anti Afk',
-    Default = false,  
-})
-
-
-Toggles.AFK:OnChanged(function() 
- 
- local VirtualUser=game:service'VirtualUser'
-game:service'Players'.LocalPlayer.Idled:connect(function()
-VirtualUser:CaptureController()
-VirtualUser:ClickButton2(Vector2.new())
-end)
-
-end)
-
-
-
-local MyButton = LeftGroupBox:AddButton('Remove Punch', function()
-local Punch = game.Players.LocalPlayer.Backpack.Punch
- 
-
-for i,v in pairs(getconnections(Punch.Changed)) do
-  v:Disable()
-end
- 
-Punch:Remove()
-end)
-
-end
