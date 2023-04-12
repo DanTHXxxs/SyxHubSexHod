@@ -1,4 +1,5 @@
 
+local librarys = {flags = {}, windows = {}, open = true}
 
 
 local InputService = game:GetService('UserInputService');
