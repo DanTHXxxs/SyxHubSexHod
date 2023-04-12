@@ -3,11 +3,66 @@ if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
 	game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
 end
 
+local ESPSettings = { PlayerESP = { Enabled = false, TracersOn = false, BoxesOn = false, NamesOn = false, DistanceOn = false, HealthOn = false, ToolOn = false, FaceCamOn = false, Distance = 2000 }, ScrapESP = { Enabled = false, Distance = 2000, LegendaryOnly = true, RareOnly = true, GoodOnly = true, BadOnly = true }, SafeESP = { Enabled = false, Distance = 2000, BigOnly = true, SmallOnly = true }, RegisterESP = { Enabled = false, Distance = 2000 }, ESPColor = Color3.fromRGB(255, 255, 255), ToolColor = Color3.fromRGB(255, 255, 255)};
+local ESPFramework = loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/main/Esp", true))()
+
+local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
+ESP:Toggle(true)
+ESP.Tracers = false 
+ESP.Boxes = false 
+ESP.Names = false
 
 _G.Respawnsss = false
 _G.Respawns = false
 _G.AutoFarms = false
 _G.AutoFarm = false
+_G.Claimss = false
+_G.claims = false
+
+
+--Esp 
+
+
+
+for i,v in pairs(game:GetService("Workspace").Trees:GetDescendants()) do
+	if string.find(v.Name,"OG_Fruit") then 
+	    if v:FindFirstChild("PhysicalTree") then 
+            ESP:Add(v.PhysicalTree, {
+                Name = "Fruit Tree",
+                IsEnabled = "Fruit",
+                                Color = Color3.fromRGB(152, 194, 219)
+            })
+        end 
+	end 
+end
+
+for i,v in pairs(game:GetService("Workspace").Trees:GetDescendants()) do
+	if string.find(v.Name,"OG_Money") then 
+	    if v:FindFirstChild("PhysicalTree") then 
+            ESP:Add(v.PhysicalTree, {
+                Name = "Money Tree",
+                IsEnabled = "Moneys",
+                Color = Color3.fromRGB(40, 127, 71)
+            })
+        end 
+	end 
+end
+
+for i,v in pairs(game:GetService("Workspace").Barbarians:GetDescendants()) do
+	if string.find(v.Name,"Barbarian") then 
+	    if v:FindFirstChild("Torso") then 
+            ESP:Add(v.Torso, {
+                Name = "Barbarian",
+                IsEnabled = "Barbarians",
+                Color = Color3.fromRGB(117, 0, 0)
+            })
+        end 
+	end 
+end
+
+--------------------------------------
+
+
 
 getgenv().ScriptPaused = false;
 
@@ -44,101 +99,20 @@ local Window = Library:CreateWindow({
 local Tabs = {
     
     Main = Window:AddTab('General'), 
+    	Visuals = Window:AddTab('Visuals'), 
     ['UI Settings'] = Window:AddTab('Settings'),
 }
 
 
 local Mainz = Tabs.Main:AddLeftGroupbox('Main')
+local Farm = Tabs.Main:AddRightGroupbox('Farm')
+
+local Espx = Tabs.Visuals:AddLeftGroupbox('Esp Player')
+local Espa = Tabs.Visuals:AddRightGroupbox('Esp')
 
 
-Mainz:AddToggle('AutoFarm', {
-    Text = 'Auto Farm [FarmKart]',
-    Default = _G.AutoFarms, 
-
-})
 
 
-Toggles.AutoFarm:OnChanged(function(Fs)
-_G.AutoFarm = Fs
-spawn(function()
-while _G.AutoFarm do
-    wait()
-    
-    --// Get Tool \\--
-function GetTool(Name)
-    local Tool = Player.Character and Player.Character:FindFirstChild(Name) or Player.Backpack:FindFirstChild(Name)
-    if Tool and Player.Character and Player.Character.Humanoid then
-        Player.Character.Humanoid:UnequipTools()
-        Player.Character.Humanoid:EquipTool(Tool)
-        task.wait()
-        return Tool
-    end
-end
-
---// Get Rice \\--
-function GetRice()
-    for _, Rice in next, RiceFolder:GetChildren() do
-        local Model = Rice:FindFirstChildOfClass("Model")
-        if Model and Model.PrimaryPart and Rice:FindFirstChild("Health") and Rice.Health.Value > 0 and Rice:FindFirstChild("Reward") and Rice.Reward.Value > 0 then
-            return Rice, Model.PrimaryPart
-        end
-    end
-end
-
---// Use Kart \\--
-function UseKart(Kart)
-    if Kart.Name == Player.Name then
-        -- Sickles
-        local Sickles = {Kart:WaitForChild("LeftSickle"), Kart:WaitForChild("RightSickle")}
-        -- Farm Rice
-        while _G.AutoFarm do
-            -- Sit
-            if Kart:FindFirstChild("VehicleSeat") and Kart.VehicleSeat.Occupant ~= Player.Character.Humanoid then
-                Kart.VehicleSeat:Sit(Player.Character.Humanoid)
-            end
-            -- Rice
-            local Rice, Part = GetRice()
-            if Rice and Kart.PrimaryPart then
-                Kart:SetPrimaryPartCFrame(Part.CFrame * CFrame.new(3,3,3))
-                task.wait(0.1);
-                for _, Sickle in next, Sickles do
-                    firetouchinterest(Sickle, Part, 0)
-                    firetouchinterest(Sickle, Part, 1)
-                end
-            end
-        end
-    end
-end
-
---// Get Kart \\--
-while _G.AutoFarm do
-    if not Karts:FindFirstChild(Player.Name) and not ScriptPaused then
-        local Tool = GetTool("FarmKart")
-        local Humanoid = Player.Character and Player.Character:FindFirstChild("Humanoid")
-        if Humanoid and Humanoid.Health <= 0 then
-            RemoteEvent:FireServer("Respawn")
-        elseif Tool then
-            Tool:Activate()
-        else
-            BuyKart:Sit(Player.Character.Humanoid)
-        end
-    else
-        if Karts:FindFirstChild(Player.Name) then
-            for i,v in pairs(Karts[Player.Name]:GetDescendants()) do
-                if v:IsA("Part") then
-                    v.CanCollide = false;
-                end
-            end
-            UseKart(Karts[Player.Name])
-        end
-    end
-    task.wait(2.3)
-end
-
-end
-end)
-
-end)
 
 Mainz:AddToggle('Auto', {
     Text = 'Auto Respawn',
@@ -153,6 +127,23 @@ _G.Respawns = Fs
 while _G.Respawns do
     wait(1.5)
 game:GetService("ReplicatedStorage").RemoteEvent:FireServer("Respawn")
+   end
+end)
+
+Mainz:AddToggle('Auto', {
+    Text = 'Auto Claim Daily Rewards',
+    Default = _G.Claimss, 
+
+})
+
+
+Toggles.Auto:OnChanged(function(Fs)
+    
+_G.claims = Fs
+while _G.claims do
+    wait()
+
+game:GetService("ReplicatedStorage").Remotes.DailyRewardEvent:FireServer("claim")
    end
 end)
 
@@ -199,6 +190,303 @@ end)
 end)
 
 
+Farm:AddToggle('sss', {
+    Text = 'WhiteScreen',
+    Default = false, 
+
+})
+
+
+Toggles.sss:OnChanged(function(Fs)
+ if Fs then
+         game:GetService("RunService"):Set3dRenderingEnabled(false)
+
+    else
+         game:GetService("RunService"):Set3dRenderingEnabled(true)
+
+    end
+end)
+
+
+local MyButton = Farm:AddButton('Anti Afk', function()
+local VirtualUser=game:service'VirtualUser'
+game:service'Players'.LocalPlayer.Idled:connect(function()
+VirtualUser:CaptureController()
+VirtualUser:ClickButton2(Vector2.new())
+end)
+end)
+
+Farm:AddDivider()
+
+
+
+Farm:AddToggle('AutoFarm', {
+    Text = 'Auto FarmKart',
+    Default = _G.AutoFarms, 
+
+})
+
+
+Toggles.AutoFarm:OnChanged(function(Fs)
+_G.AutoFarm = Fs
+spawn(function()
+while _G.AutoFarm do
+    wait()
+
+    
+    --// Get Tool \\--
+function GetTool(Name)
+    local Tool = Player.Character and Player.Character:FindFirstChild(Name) or Player.Backpack:FindFirstChild(Name)
+    if Tool and Player.Character and Player.Character.Humanoid then
+        Player.Character.Humanoid:UnequipTools()
+        Player.Character.Humanoid:EquipTool(Tool)
+        task.wait()
+        return Tool
+    end
+end
+
+--// Get Rice \\--
+function GetRice()
+    for _, Rice in next, RiceFolder:GetChildren() do
+        local Model = Rice:FindFirstChildOfClass("Model")
+        if Model and Model.PrimaryPart and Rice:FindFirstChild("Health") and Rice.Health.Value > 0 and Rice:FindFirstChild("Reward") and Rice.Reward.Value > 0 then
+            return Rice, Model.PrimaryPart
+        end
+    end
+end
+
+--// Use Kart \\--
+function UseKart(Kart)
+    if Kart.Name == Player.Name then
+        -- Sickles
+        local Sickles = {Kart:WaitForChild("LeftSickle"), Kart:WaitForChild("RightSickle")}
+        -- Farm Rice
+        while _G.AutoFarm do
+            -- Sit
+            if Kart:FindFirstChild("VehicleSeat") and Kart.VehicleSeat.Occupant ~= Player.Character.Humanoid then
+                Kart.VehicleSeat:Sit(Player.Character.Humanoid)
+            end
+            -- Rice
+            local Rice, Part = GetRice()
+            if Rice and Kart.PrimaryPart then
+                Kart:SetPrimaryPartCFrame(Part.CFrame * CFrame.new(5,5,5))
+                task.wait(0.1);
+                for _, Sickle in next, Sickles do
+                    firetouchinterest(Sickle, Part, 0)
+                    firetouchinterest(Sickle, Part, 1)
+                end
+            end
+        end
+    end
+end
+
+--// Get Kart \\--
+while _G.AutoFarm do
+    if not Karts:FindFirstChild(Player.Name) and not ScriptPaused then
+        local Tool = GetTool("FarmKart")
+        local Humanoid = Player.Character and Player.Character:FindFirstChild("Humanoid")
+        if Humanoid and Humanoid.Health <= 0 then
+            RemoteEvent:FireServer("Respawn")
+        elseif Tool then
+            Tool:Activate()
+        else
+            BuyKart:Sit(Player.Character.Humanoid)
+        end
+    else
+        if Karts:FindFirstChild(Player.Name) then
+            for i,v in pairs(Karts[Player.Name]:GetDescendants()) do
+                if v:IsA("Part") then
+                    v.CanCollide = false;
+                end
+            end
+            UseKart(Karts[Player.Name])
+        end
+    end
+    task.wait(2.3)
+end
+
+end
+end)
+
+end)
+
+
+Espx:AddToggle('Esp', {
+    Text = 'Enabled Esp',
+    Default = ESPSettings.PlayerESP.Enabled, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(v)
+     ESPSettings.PlayerESP.Enabled = v
+
+    ESPFramework.Color = ESPSettings.ESPColor
+    ESPFramework.ToolColor = ESPSettings.ToolColor
+    ESPFramework.Tracers = ESPSettings.PlayerESP.TracersOn
+    ESPFramework.Names = ESPSettings.PlayerESP.NamesOn
+    ESPFramework.Health = ESPSettings.PlayerESP.HealthOn
+    ESPFramework.Distance = ESPSettings.PlayerESP.DistanceOn
+    ESPFramework.Tool = ESPSettings.PlayerESP.ToolOn
+    ESPFramework.Boxes = ESPSettings.PlayerESP.BoxesOn
+    ESPFramework.FaceCamera = ESPSettings.PlayerESP.FaceCamOn
+    ESPFramework:Toggle(ESPSettings.PlayerESP.Enabled)
+end)
+
+Espx:AddToggle('Esp', {
+    Text = 'Esp Name',
+    Default = ESPSettings.PlayerESP.NamesOn, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(v)
+   ESPSettings.PlayerESP.NamesOn = v
+    ESPFramework.Names = ESPSettings.PlayerESP.NamesOn
+  
+  end) 
+
+
+
+Espx:AddToggle('Esp', {
+    Text = 'Esp Box',
+    Default = ESPSettings.PlayerESP.BoxesOn, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(v)
+   ESPSettings.PlayerESP.BoxesOn = v
+    ESPFramework.Boxes = ESPSettings.PlayerESP.BoxesOn
+  
+end) 
+
+
+Espx:AddToggle('Esp', {
+    Text = 'Esp Tracers',
+    Default = ESPSettings.PlayerESP.TracersOn, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(v)
+  
+  ESPSettings.PlayerESP.TracersOn = v
+    ESPFramework.Tracers = ESPSettings.PlayerESP.TracersOn
+end) 
+
+
+Espx:AddToggle('Esp', {
+    Text = 'Esp Health',
+    Default = ESPSettings.PlayerESP.HealthOn, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(v)
+  ESPSettings.PlayerESP.HealthOn = v
+    ESPFramework.Health = ESPSettings.PlayerESP.HealthOn
+  
+end) 
+
+
+Espx:AddToggle('Esp', {
+    Text = 'Esp Tool',
+    Default = ESPSettings.PlayerESP.ToolOn, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(v)
+   ESPSettings.PlayerESP.ToolOn = v
+    ESPFramework.Tool = ESPSettings.PlayerESP.ToolOn
+  
+end) 
+
+
+
+Espa:AddToggle('Esp', {
+    Text = 'Enabled Esp',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+     ESP:Toggle(Value)
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Name',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+      ESP.Names = Value 
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Box',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+     ESP.Boxes = Value  
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Tracers',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.Tracers = Value   
+end)
+
+
+
+
+Espa:AddDivider()
+
+
+Espa:AddToggle('Esp', {
+    Text = 'Fruit Tree',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.Fruit = Value   
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Money Tree',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.Moneys = Value   
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Barbarian',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.Barbarians = Value   
+end)
 
 local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
 
