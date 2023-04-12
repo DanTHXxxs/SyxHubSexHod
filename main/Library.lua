@@ -25,7 +25,7 @@ getgenv().Options = Options;
 local Library = {
     Registry = {};
     RegistryMap = {};
-
+       flags = {};
     HudRegistry = {};
 
     FontColor = Color3.fromRGB(255, 255, 255);
