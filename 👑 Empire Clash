@@ -1,0 +1,255 @@
+
+
+if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
+	game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
+end
+
+
+local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
+ESP:Toggle(true)
+ESP.Players = false 
+ESP.Tracers = false 
+ESP.Boxes = false 
+ESP.Names = false
+
+for i,v in pairs(game:GetService("Workspace"):GetDescendants()) do
+	if string.find(v.Name,"Coal node") then 
+	    if v:FindFirstChild("HitBox") then 
+            ESP:Add(v.HitBox, {
+                Name = "Coal",
+                IsEnabled = "coals",
+                Color = Color3.fromRGB(51, 88, 130)
+            })
+        end 
+	end 
+end
+
+for i,v in pairs(game:GetService("Workspace"):GetDescendants()) do
+	if string.find(v.Name,"Iron node") then 
+	    if v:FindFirstChild("HitBox") then 
+            ESP:Add(v.HitBox, {
+                Name = "Iron",
+                IsEnabled = "irons",
+                Color = Color3.fromRGB(213, 115, 61)
+            })
+        end 
+	end 
+end
+
+for i,v in pairs(game:GetService("Workspace"):GetDescendants()) do
+	if string.find(v.Name,"Gold node") then 
+	    if v:FindFirstChild("HitBox") then 
+            ESP:Add(v.HitBox, {
+                Name = "Gold",
+                IsEnabled = "golds",
+                Color = Color3.fromRGB(255, 255, 0)
+            })
+        end 
+	end 
+end
+
+local repo = 'https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/'
+
+local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
+local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+
+
+local Window = Library:CreateWindow({
+
+    Title = "Sy x Hub | 👑 Empire Clash  | " ..os.date("%d ")..os.date("%A ")..os.date("%B ")..os.date("%Y"),0,9356831478,
+    Center = true, 
+    AutoShow = true,
+})
+
+
+local Tabs = {
+
+
+	Visuals = Window:AddTab('Visuals'), 
+    ['UI Settings'] = Window:AddTab('UI Settings'),
+}
+
+
+
+--Visuals
+local bccc = Tabs.Visuals:AddLeftGroupbox('Esp Player')
+local Espa = Tabs.Visuals:AddRightGroupbox('Esp')
+
+
+
+getgenv().cham = false 
+getgenv().nameESP = false 
+getgenv().boxESP = false 
+getgenv().esp_loaded = false 
+getgenv().Visibility = false 
+getgenv().useTeamColor = false 
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Enabled Esp',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+  loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().Visibility = m 
+end)
+
+
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Box',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+  loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().boxESP = m 
+end)
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Name',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+   loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().nameESP = m 
+end)
+
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Chams',
+    Default = getgenv().Visibility, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m) if getgenv().esp_loaded == false and m == true then getgenv().esp_loaded = true 
+   loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\115\107\97\116\98\114\47\82\111\98\108\111\120\45\82\101\108\101\97\115\101\115\47\109\97\105\110\47\65\95\115\105\109\112\108\101\95\101\115\112\46\108\117\97", true))() end getgenv().cham = m 
+end)
+
+
+
+
+bccc:AddToggle('ESPxx', {
+    Text = 'Team Color',
+    Default = false, 
+})
+
+
+Toggles.ESPxx:OnChanged(function(m)  getgenv().useTeamColor = m  
+end)
+
+
+
+
+-----------------------------------------------------------
+
+Espa:AddToggle('Esp', {
+    Text = 'Enabled Esp',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+     ESP:Toggle(Value)
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Name',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+      ESP.Names = Value 
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Box',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+     ESP.Boxes = Value  
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Tracers',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.Tracers = Value   
+end)
+
+
+
+Espa:AddDivider()
+
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Coal',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.coals = Value   
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Iron',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.irons = Value   
+end)
+
+Espa:AddToggle('Esp', {
+    Text = 'Esp Gold',
+    Default = false, 
+
+})
+
+
+Toggles.Esp:OnChanged(function(Value)
+ESP.golds = Value   
+end)
+
+
+
+local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('\           \\\\ Menu //')
+
+
+MenuGroup:AddButton('Unload', function() Library:Unload() end)
+MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'F4', NoUI = true, Text = 'Menu keybind' }) 
+
+
+
+
+Library.ToggleKeybind = Options.MenuKeybind 
+
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+
+
+SaveManager:SetIgnoreIndexes({ 'MenuKeybind' }) 
+
+
+
+
