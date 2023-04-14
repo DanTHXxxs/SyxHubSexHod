@@ -41,14 +41,70 @@ if not LPH_OBFUSCATED then
 end
 
 local infjump = false
+local teleported = false
 local walkspeed = 16
 local jumppower = 50
 local ctrltp = false
+local aibarboff = false
+local stealheal = false
+local bodyspammer = false
 local spoofarrest = false
 local spoofrent = false
 local fly = false
 local flyspeed = 0.5
 local spamsounds = false
+local kartfly = false
+local vehicleflyspeed = 5
+local autorepair = false
+local autorepairtool = "Basic Hammer"
+local buildingstorepairtable = {}
+local autosickle = false
+local autosickletool = "Basic Sickle"
+local autochop = false
+local autochoptree = {}
+local autochoptool = "Basic Axe"
+local autofish = false
+local autofishtool = "Basic Fishing Net"
+local autofishies = {}
+local autofarmkart = false
+local autovote = false
+local autovotesetting = {}
+local killbarbs = false
+local autoarrest = false
+local autoarrestteam = {}
+local killplayer = nil
+local autosteal = false
+local hitman = false
+local hitmanplayertarget = nil
+local autoheal = false
+local autohealplr = nil
+local autohealteam = {}
+local autorent = false
+local autorentteam = {}
+local autotrip = false
+local autotripteam = {}
+local hitbox = false
+local hitboxsize = 5
+local killaura = false
+local silentaim = false
+local playertowhitelist = nil
+local autohunter = false
+local playertohunt = nil
+local autohuntteam = {}
+local kartwarper = false
+local playertowarp = nil
+local playertotele = false
+local frameplayer = nil
+local espmoney = false
+local espfish = false
+local noplresp = false
+local boxes = false
+local tracers = false
+local names = false
+local teamcolors = false
+
+
+
 
 
 LPH_NO_VIRTUALIZE(function()
@@ -414,7 +470,6 @@ game:GetService("TextChatService").OnIncomingMessage = function(msg)
     end
 end end)();
 
-
 task.spawn(function() LPH_NO_VIRTUALIZE(function()
     run.RenderStepped:Connect(function()
         if CheckPlayer(lplr) then lplr.Character.Humanoid.JumpPower = jumppower end
@@ -481,11 +536,12 @@ task.spawn(function() LPH_NO_VIRTUALIZE(function()
                         end
                     end
                 end
+
                 if wksp.CouncilHouse:FindFirstChild("COUNCILONLY") then
                     wksp.CouncilHouse:FindFirstChild("COUNCILONLY").Parent = nil
                 end
-                if wksp.GuardBase.GuardCollision:FindFirstChild("GUARDONLY") then
-                    wksp.GuardBase.GuardCollision:FindFirstChild("GUARDONLY").Parent = nil
+                if wksp._VisualMap.GuardBase.GuardCollision:FindFirstChild("GUARDONLY") then
+                    wksp._VisualMap.GuardBase.GuardCollision:FindFirstChild("GUARDONLY").Parent = nil
                 end
                 if wksp.LeaderTower:FindFirstChild("LEADERONLY") then
                     wksp.LeaderTower:FindFirstChild("LEADERONLY").Parent = nil
@@ -1169,7 +1225,8 @@ local Tabs = {
     
     Main = Window:AddTab('General'), 
     Farmzz = Window:AddTab('Farming'), 
-    	Visuals = Window:AddTab('Visuals'), 
+    combatsz = Window:AddTab('Combat - Team'), 
+    Visuals = Window:AddTab('Teleport - Visuals'), 
 
     ['UI Settings'] = Window:AddTab('Settings'),
 }
@@ -1181,18 +1238,26 @@ local TabBoxT = Tabs.Main:AddLeftTabbox()
 local TabBoxTe = Tabs.Main:AddRightTabbox()
 local TabBoxTezz = Tabs.Main:AddRightTabbox()
 local TabBoxTest = Tabs.Visuals:AddLeftTabbox()
+local TabBoxTestaa = Tabs.Visuals:AddLeftTabbox()
 local TabBoxTests = Tabs.Visuals:AddRightTabbox()
+local TabBoxTestaaa = Tabs.Visuals:AddRightTabbox()
 local TabBox = Tabs.Farmzz:AddLeftTabbox()
 local TabBox1 = Tabs.Farmzz:AddRightTabbox()
 local TabBoxPor = Tabs.Farmzz:AddRightTabbox()
 local TabBoxPo = Tabs.Farmzz:AddLeftTabbox()
+local TabBoxPosxz = Tabs.combatsz:AddLeftTabbox()
+
+
 
 local Mainz = TabBoxT:AddTab('Main')
 local Humanoid = TabBoxTe:AddTab('Character')
 local checkss = TabBoxTezz:AddTab('Check %')
 
 local Espx = TabBoxTest:AddTab('Esp Player')
+local Teleportation = TabBoxTestaaa:AddTab('Teleport To Player')
+local Seat = TabBoxTestaa:AddTab('Teleport')
 local Espa = TabBoxTests:AddTab('Esp')
+
 
 local Vote = TabBox:AddTab('Auto Vote')
 local FarmKarts = TabBox1:AddTab('Farm Kart')
@@ -1203,9 +1268,85 @@ local Fishing = TabBoxPor:AddTab('Farm Fish')
 
 local Hammer = TabBoxPo:AddTab('Auto Build and Repair')
 
+local Combat = TabBoxPosxz:AddTab('Combat')
+local Hunter = TabBoxPosxz:AddTab('Hunter')
 
 
+Combat:AddToggle('Hitboxes', {
+    Text = 'Enabled Hitbox',
+    Default = false,
+   
+})
+Toggles.Hitboxes:OnChanged(function()
+    hitbox = Toggles.Hitboxes.Value
+end)
+Combat:AddSlider('hitboxSize', {
+    Text = 'Hitbox Size',
+    Default = 5,
+    Min = 0,
+    Max = 20,
+    Rounding = 0,
 
+    Compact = false,
+})
+Options.hitboxSize:OnChanged(function()
+    hitboxsize = Options.hitboxSize.Value
+end)
+
+Combat:AddDivider()
+
+
+Combat:AddToggle('killAura', {
+    Text = 'Kill Aura',
+    Default = false,
+   
+})
+Toggles.killAura:OnChanged(function()
+    killaura = Toggles.killAura.Value
+end)
+Combat:AddToggle('silentAim', {
+    Text = 'Silent Aim',
+    Default = false,
+    
+})
+Toggles.silentAim:OnChanged(function()
+    silentaim = Toggles.silentAim.Value
+end)
+
+
+Hunter:AddInput('playerToHunt', {
+    Default = '',
+    Numeric = false,
+    Finished = false,
+
+    Text = 'Name Player To Kill',
+   
+
+})
+Options.playerToHunt:OnChanged(function()
+    playertohunt = Options.playerToHunt.Value
+end)
+Hunter:AddDropdown('teamsToHunt', {
+    Values = { 'Leader', 'Council Member', 'Landlord', 'Guard', 'Doctor', 'Jester', 'Janitor', 'Civilian', 'Peasant' },
+    Default = 0,
+    Multi = true,
+    Text = 'Teams To Kill',
+})
+Options.teamsToHunt:OnChanged(function()
+    autohuntteam = {}
+    for key, value in next, Options.teamsToHunt.Value do
+        table.insert(autohuntteam, key)
+    end
+end)
+
+Hunter:AddToggle('autoHunter', {
+    Text = 'Kill Player',
+    Default = false,
+   
+})
+Toggles.autoHunter:OnChanged(function()
+    autohunter = Toggles.autoHunter.Value
+end)
 
 Approvals = checkss:AddLabel('')
 FoodHums = checkss:AddLabel('')
@@ -1261,7 +1402,7 @@ game:GetService("ReplicatedStorage").Remotes.DailyRewardEvent:FireServer("claim"
    end
 end)
 
-Mainz:AddDivider()
+
 Mainz:AddToggle('spamSounds', {
     Text = 'Spam Sounds',
     Default = false,
@@ -1269,24 +1410,6 @@ Mainz:AddToggle('spamSounds', {
 })
 Toggles.spamSounds:OnChanged(function()
     spamsounds = Toggles.spamSounds.Value
-end)
-
-
-Mainz:AddToggle('spoofRent', {
-    Text = 'Collect Rent',
-    Default = false,
-
-})
-Toggles.spoofRent:OnChanged(function()
-    spoofrent = Toggles.spoofRent.Value
-end)
-Mainz:AddToggle('spoofArrest', {
-    Text = 'Arrest',
-    Default = false,
-    
-})
-Toggles.spoofArrest:OnChanged(function()
-    spoofarrest = Toggles.spoofArrest.Value
 end)
 
 
@@ -1771,6 +1894,49 @@ Espa:AddToggle('Esp', {
 Toggles.Esp:OnChanged(function(Value)
 ESP.Barbarians = Value   
 end)
+
+
+Teleportation:AddInput('teleportToPlayer', {
+    Default = '',
+    Numeric = false,
+    Finished = false,
+
+    Text = 'Name Player',
+
+
+
+})
+Options.teleportToPlayer:OnChanged(function()
+    playertotele = Options.teleportToPlayer.Value
+end)
+
+
+Teleportation:AddButton('Teleport', function()
+    for _, plr in pairs(game:GetService("Players"):GetPlayers()) do
+        if string.lower(playertotele) == string.lower(plr.Name) or string.lower(playertotele) == string.lower(plr.DisplayName) then
+            if CheckPlayer(plr) then
+                Teleport(plr.Name)
+            end
+        end
+    end
+end)
+
+
+function newtpseat(name, pos)
+    Seat:AddButton(name, function()
+        if CheckPlayer(lplr) then
+            lplr.Character.HumanoidRootPart.CFrame = pos
+        end
+    end)
+end
+newtpseat("Barbarian", wksp.BarbStores:FindFirstChild("Admission").CustomerSeat.CFrame)
+newtpseat("Town", CFrame.new(6.04245, 23.4297, 402.954))
+newtpseat("Kart", wksp.BarbStores:FindFirstChild("Kart").CustomerSeat.CFrame)
+newtpseat("Arena", wksp.Arena.VisualArena.Chair.Seat.CFrame)
+newtpseat("Ally's", CFrame.new(-176.041, 1.85007, 52.2702))
+newtpseat("Tavern", wksp["_VisualMap"].Tavern.Chair.Seat.CFrame)
+newtpseat("Jail", wksp.Jail.Stands:FindFirstChild("Seat").CFrame)
+
 
 local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
 
