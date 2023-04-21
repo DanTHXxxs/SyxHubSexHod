@@ -1,0 +1,207 @@
+
+if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
+	game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
+end
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/main/Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/main/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/main/SaveManager.lua"))()
+
+local Window = Library:CreateWindow({
+
+    Title = 'Sy x Hub | Build A Boat For Treasure | '   ..os.date("%d ")..os.date("%A ")..os.date("%B ")..os.date("%Y"),0,9356831478,
+    Center = true, 
+    AutoShow = true,
+})
+
+
+local Tabs = {
+    
+    Main = Window:AddTab('General'), 
+    shop = Window:AddTab('Shop'), 
+    ['UI Settings'] = Window:AddTab('Settings'),
+}
+
+
+local Main = Tabs.Main:AddLeftGroupbox('Main')
+local quests = Tabs.Main:AddLeftGroupbox('Quests')
+local Main1 = Tabs.Main:AddRightGroupbox('Team')
+
+function TP(P1)
+	Distance = (P1.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	if Distance < 250 then
+		Speed = 600
+	elseif Distance < 500 then
+		Speed = 400
+	elseif Distance < 1000 then
+		Speed = 350
+	elseif Distance >= 1000 then
+		Speed = 200
+	end
+	game:GetService("TweenService"):Create(
+	game.Players.LocalPlayer.Character.HumanoidRootPart,
+	TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),
+	{CFrame = P1}
+	):Play()
+	Clip = true
+	wait(Distance/Speed)
+	Clip = false
+end
+
+function TP2(P1)
+	Distance = (P1.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	if Distance < 1000 then
+		Speed = 400
+	elseif Distance >= 1000 then
+		Speed = 250
+	end
+	game:GetService("TweenService"):Create(
+	game.Players.LocalPlayer.Character.HumanoidRootPart,
+	TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),
+	{CFrame = P1}
+	):Play()
+	Clip = true
+	wait(Distance/Speed)
+	Clip = false
+end
+
+
+Main:AddToggle('Toggle', {
+    Text = 'Auto Farm',
+    Default = false, 
+    
+})
+
+
+Toggles.Toggle:OnChanged(function(aaa)
+ _G.valuesa = aaa
+
+spawn(function()
+while _G.valuesa do
+    wait()
+
+
+
+TP2(CFrame.new(-57, 114, 891))
+TP2(CFrame.new(-58, 108, 1367))
+TP2(CFrame.new(-45, 102, 2135))
+TP2(CFrame.new(-59, 76, 2902))
+TP2(CFrame.new(-56, 85, 3679))
+TP2(CFrame.new(-62, 77, 4447))
+TP2(CFrame.new(-65, 57, 5212))
+TP2(CFrame.new(-50, 41, 5981))
+TP2(CFrame.new(-63, 80, 6758))
+TP2(CFrame.new(-63, 78, 7526))
+TP2(CFrame.new(-61, 119, 8298))
+TP2(CFrame.new(-22, 101, 8977))
+TP2(CFrame.new(-56, -359, 9499))
+
+
+
+game:GetService("RunService").Heartbeat:connect(function()
+    if Clip then
+        game:GetService("Players").LocalPlayer.Character.Humanoid:ChangeState(11)
+    end
+end)
+
+end
+end)
+
+
+
+
+
+
+
+do
+    local NM = game:GetService("Workspace"):FindFirstChild("Noclip")
+    if NM then
+        NM:Destroy()
+    end
+end
+local Noclip = Instance.new("Part",workspace)
+      Noclip.Name         = "Noclip"
+      Noclip.CanCollide   = _G.valuesa
+      Noclip.Anchored     = _G.valuesa
+      Noclip.Transparency = 0.5
+      Noclip.Size         = Vector3.new(5,4,5)
+function Noclip()
+game:GetService("Workspace"):FindFirstChild("Noclip").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-5,0)
+end
+_G.Noclip = _G.valuesa
+while _G.Noclip do wait(.1)
+pcall(function()
+Noclip()
+end)
+end 
+  
+end)
+
+
+
+
+
+local MyButton = Main1:AddButton('Join Team White', function()
+workspace.ChangeTeam:FireServer(game:GetService("Teams").white)
+end)
+
+
+local MyButton = Main1:AddButton('Join Team Magenta', function()
+workspace.ChangeTeam:FireServer(game:GetService("Teams").magenta)
+end)
+
+
+local MyButton = Main1:AddButton('Join Team Blue', function()
+workspace.ChangeTeam:FireServer(game:GetService("Teams").blue)
+end)
+
+
+local MyButton = Main1:AddButton('Join Team Black', function()
+workspace.ChangeTeam:FireServer(game:GetService("Teams").black)
+end)
+
+
+local MyButton = Main1:AddButton('Join Team Red', function()
+workspace.ChangeTeam:FireServer(game:GetService("Teams").red)
+end)
+
+
+local MyButton = Main1:AddButton('Join Team Green', function()
+
+workspace.ChangeTeam:FireServer(game:GetService("Teams").green)
+end)
+
+
+local MyButton = Main1:AddButton('Join Team Yellow', function()
+workspace.ChangeTeam:FireServer(game:GetService("Teams").yellow)
+end)
+
+
+
+
+
+
+
+
+local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
+
+
+MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'F4', NoUI = true, Text = 'Menu keybind' }) 
+
+Library.ToggleKeybind = Options.MenuKeybind
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+SaveManager:IgnoreThemeSettings() 
+
+
+SaveManager:SetIgnoreIndexes({ 'MenuKeybind' }) 
+
+
+ThemeManager:SetFolder('MyScriptHub')
+
+SaveManager:BuildConfigSection(Tabs['UI Settings']) 
+
+ThemeManager:ApplyToTab(Tabs['UI Settings'])
+
+
