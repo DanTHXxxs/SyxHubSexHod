@@ -1,1 +1,9 @@
+--Sy x Hub All Map Scripts
 
+if game.PlaceId == 4598019433 then
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/Scripts/generic%20roleplay%20gaem"))()
+
+elseif game.PlaceId == 537413528 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/DanTHXxxs/SyxHubSexHod/main/Scripts/Build%20A%20Boat%20For%20Treasure"))()
+end
