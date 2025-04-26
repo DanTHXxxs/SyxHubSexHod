@@ -1,0 +1,650 @@
+local cloneref = (cloneref or clonereference or function(instance: any) return instance end)
+local InputService: UserInputService = cloneref(game:GetService('UserInputService'));
+local TextService: TextService = cloneref(game:GetService('TextService'));
+local CoreGui: CoreGui = cloneref(game:GetService('CoreGui'));
+local Teams: Teams = cloneref(game:GetService('Teams'));
+local Players: Players = cloneref(game:GetService('Players'));
+local RunService: RunService = cloneref(game:GetService('RunService'));
+local TweenService: TweenService = cloneref(game:GetService('TweenService'));
+local RenderStepped = RunService.RenderStepped;
+local LocalPlayer = Players.LocalPlayer;
+local Mouse = LocalPlayer:GetMouse();
+
+local DrawingLib = typeof(Drawing) == "table" and Drawing or { drawing_replaced = true };
+local ProtectGui = protectgui or (function() end);
+local GetHUI = gethui or (function() return CoreGui end);
+
+local IsBadDrawingLib = false;
+
+local ScreenGui = Instance.new('ScreenGui');
+pcall(ProtectGui, ScreenGui);
+
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
+local Parented = pcall(function() ScreenGui.Parent = GetHUI(); end);
+if not Parented then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui", 9e9) end;
+
+--[[
+    You can access Toggles & Options through (I'm planning to remove **a** option):
+        a) getgenv().Toggles, getgenv().Options (IY will break this getgenv)
+        b) getgenv().Linoria.Toggles, getgenv().Linoria.Options
+        c) Library.Toggles, Library.Options
+--]]
+
+local Toggles = {};
+local Options = {};
+local Labels = {};
+local Buttons = {};
+
+getgenv().Linoria = {
+    Toggles = Toggles;
+    Options = Options;
+    Labels = Labels;
+    Buttons = Buttons;
+}
+
+getgenv().Toggles = Toggles; -- if you load infinite yeild after you executed any script with LinoriaLib it will just break the whole UI lib :/ (thats why I added getgenv().Linoria)
+getgenv().Options = Options;
+getgenv().Labels = Labels;
+getgenv().Buttons = Buttons;
+
+local LibraryMainOuterFrame = nil;
+local Library = {
+    Registry = {};
+    RegistryMap = {};
+
+    HudRegistry = {};
+
+    FontColor = Color3.fromRGB(255, 255, 255);
+    MainColor = Color3.fromRGB(28, 28, 28);
+    BackgroundColor = Color3.fromRGB(20, 20, 20);
+
+    AccentColor = Color3.fromRGB(0, 85, 255);
+    DisabledAccentColor = Color3.fromRGB(142, 142, 142);
+
+    OutlineColor = Color3.fromRGB(50, 50, 50);
+    DisabledOutlineColor = Color3.fromRGB(70, 70, 70);
+
+    DisabledTextColor = Color3.fromRGB(142, 142, 142);
+
+    RiskColor = Color3.fromRGB(255, 50, 50);
+
+    Black = Color3.new(0, 0, 0);
+    Font = Enum.Font.Code,
+
+    OpenedFrames = {};
+    DependencyBoxes = {};
+
+    UnloadSignals = {};
+    Signals = {};
+    ScreenGui = ScreenGui;
+    
+    ActiveTab = nil;
+    Toggled = false;
+
+    IsMobile = false;
+    DevicePlatform = Enum.Platform.None;
+
+    CanDrag = true;
+    CantDragForced = false;
+
+    NotifySide = "Left";
+    ShowCustomCursor = true;
+    ShowToggleFrameInKeybinds = true;
+    NotifyOnError = false; -- true = Library:Notify for SafeCallback (still warns in the developer console)
+
+    VideoLink = "";
+    TotalTabs = 0;
+
+    -- for better usage --
+    Toggles = Toggles;
+    Options = Options;
+    Labels = Labels;
+    Buttons = Buttons;
+};
+
+pcall(function() Library.DevicePlatform = InputService:GetPlatform(); end); -- For safety so the UI library doesn't error.
+Library.IsMobile = (Library.DevicePlatform == Enum.Platform.Android or Library.DevicePlatform == Enum.Platform.IOS);
+Library.MinSize = if Library.IsMobile then Vector2.new(550, 200) else Vector2.new(550, 300);
+
+local RainbowStep = 0
+local Hue = 0
+local DPIScale = 1
+
+table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
+    RainbowStep = RainbowStep + Delta
+
+    if RainbowStep >= (1 / 60) then
+        RainbowStep = 0;
+
+        Hue = Hue + (1 / 400);
+
+        if Hue > 1 then
+            Hue = 0;
+        end;
+
+        Library.CurrentRainbowHue = Hue;
+        Library.CurrentRainbowColor = Color3.fromHSV(Hue, 0.8, 1);
+    end;
+end));
+
+local function ApplyDPIScale(Position)
+    return UDim2.new(Position.X.Scale, Position.X.Offset * DPIScale, Position.Y.Scale, Position.Y.Offset * DPIScale);
+end;
+
+local function ApplyTextScale(TextSize)
+    return TextSize * DPIScale;
+end;
+
+local function GetTableSize(t)
+    local n = 0
+    for _, _ in pairs(t) do
+        n = n + 1
+    end
+    return n;
+end;
+
+local function GetPlayers(ExcludeLocalPlayer, ReturnInstances)
+    local PlayerList = Players:GetPlayers();
+
+    if ExcludeLocalPlayer then
+        local Idx = table.find(PlayerList, LocalPlayer);
+
+        if Idx then
+            table.remove(PlayerList, Idx);
+        end
+    end
+
+    table.sort(PlayerList, function(Player1, Player2)
+        return Player1.Name:lower() < Player2.Name:lower();
+    end)
+
+    if ReturnInstances == true then
+        return PlayerList;
+    end;
+
+    local FixedPlayerList = {};
+    for _, player in next, PlayerList do
+        FixedPlayerList[#FixedPlayerList + 1] = player.Name;
+    end;
+
+    return FixedPlayerList;
+end;
+
+local function GetTeams(ReturnInstances)
+    local TeamList = Teams:GetTeams();
+
+    table.sort(TeamList, function(Team1, Team2)
+        return Team1.Name:lower() < Team2.Name:lower();
+    end)
+
+    if ReturnInstances == true then
+        return TeamList;
+    end;
+
+    local FixedTeamList = {};
+    for _, team in next, TeamList do
+        FixedTeamList[#FixedTeamList + 1] = team.Name;
+    end;
+
+    return FixedTeamList;
+end;
+
+function Library:SetDPIScale(value: number) 
+    assert(type(value) == "number", "Expected type number for DPI scale but got " .. typeof(value))
+    
+    DPIScale = value / 100;
+    Library.MinSize = (if Library.IsMobile then Vector2.new(550, 200) else Vector2.new(550, 300)) * DPIScale;
+end;
+
+function Library:SafeCallback(Func, ...)
+    if not (Func and typeof(Func) == "function") then
+        return
+    end
+
+    local run = function(func, ...)
+        local Success, Response = pcall(func, ...)
+        if Success then
+            return Response
+        end
+    
+        local Traceback = debug.traceback():gsub("\n", " ")
+        local _, i = Traceback:find(":%d+ ")
+        Traceback = Traceback:sub(i + 1):gsub(" :", ":")
+    
+        task.defer(error, Response .. " - " .. Traceback)
+        if Library.NotifyOnError then
+            Library:Notify(Response)
+        end
+    end;
+
+    task.spawn(run, Func, ...);
+end;
+
+function Library:AttemptSave()
+    if (not Library.SaveManager) then return end;
+    Library.SaveManager:Save();
+end;
+
+function Library:Create(Class, Properties)
+    local _Instance = Class;
+
+    if typeof(Class) == "string" then
+        _Instance = Instance.new(Class);
+    end;
+
+    for Property, Value in next, Properties do
+        if (Property == "Size" or Property == "Position") then
+            Value = ApplyDPIScale(Value);
+        elseif Property == "TextSize" then
+            Value = ApplyTextScale(Value);
+        end;
+
+        local success, err = pcall(function()
+            _Instance[Property] = Value;
+        end);
+
+        if (not success) then
+            warn(err);
+        end;
+    end;
+
+    return _Instance;
+end;
+
+function Library:ApplyTextStroke(Inst)
+    Inst.TextStrokeTransparency = 1;
+
+    return Library:Create('UIStroke', {
+        Color = Color3.new(0, 0, 0);
+        Thickness = 1;
+        LineJoinMode = Enum.LineJoinMode.Miter;
+        Parent = Inst;
+    });
+end;
+
+function Library:CreateLabel(Properties, IsHud)
+    local _Instance = Library:Create('TextLabel', {
+        BackgroundTransparency = 1;
+        Font = Library.Font;
+        TextColor3 = Library.FontColor;
+        TextSize = 16;
+        TextStrokeTransparency = 0;
+    });
+
+    Library:ApplyTextStroke(_Instance);
+
+    Library:AddToRegistry(_Instance, {
+        TextColor3 = 'FontColor';
+    }, IsHud);
+
+    return Library:Create(_Instance, Properties);
+end;
+
+function Library:MakeDraggable(Instance, Cutoff, IsMainWindow)
+    Instance.Active = true;
+
+    if Library.IsMobile == false then
+        Instance.InputBegan:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                if IsMainWindow == true and Library.CantDragForced == true then
+                    return;
+                end;
+           
+                local ObjPos = Vector2.new(
+                    Mouse.X - Instance.AbsolutePosition.X,
+                    Mouse.Y - Instance.AbsolutePosition.Y
+                );
+
+                if ObjPos.Y > (Cutoff or 40) then
+                    return;
+                end;
+
+                while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+                    Instance.Position = UDim2.new(
+                        0,
+                        Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
+                        0,
+                        Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+                    );
+
+                    RenderStepped:Wait();
+                end;
+            end;
+        end);
+    else
+        local Dragging, DraggingInput, DraggingStart, StartPosition;
+
+        InputService.TouchStarted:Connect(function(Input)
+            if IsMainWindow == true and Library.CantDragForced == true then
+                Dragging = false
+                return;
+            end
+
+            if not Dragging and Library:MouseIsOverFrame(Instance, Input) and (IsMainWindow == true and (Library.CanDrag == true and Library.Window.Holder.Visible == true) or true) then
+                DraggingInput = Input;
+                DraggingStart = Input.Position;
+                StartPosition = Instance.Position;
+
+                local OffsetPos = Input.Position - DraggingStart;
+                if OffsetPos.Y > (Cutoff or 40) then
+                    Dragging = false;
+                    return;
+                end;
+
+                Dragging = true;
+            end;
+        end);
+        InputService.TouchMoved:Connect(function(Input)
+            if IsMainWindow == true and Library.CantDragForced == true then
+                Dragging = false;
+                return;
+            end
+
+            if Input == DraggingInput and Dragging and (IsMainWindow == true and (Library.CanDrag == true and Library.Window.Holder.Visible == true) or true) then
+                local OffsetPos = Input.Position - DraggingStart;
+
+                Instance.Position = UDim2.new(
+                    StartPosition.X.Scale,
+                    StartPosition.X.Offset + OffsetPos.X,
+                    StartPosition.Y.Scale,
+                    StartPosition.Y.Offset + OffsetPos.Y
+                );
+            end;
+        end);
+        InputService.TouchEnded:Connect(function(Input)
+            if Input == DraggingInput then 
+                Dragging = false;
+            end;
+        end);
+    end;
+end;
+
+function Library:MakeDraggableUsingParent(Instance, Parent, Cutoff, IsMainWindow)
+    Instance.Active = true;
+
+    if Library.IsMobile == false then
+        Instance.InputBegan:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                if IsMainWindow == true and Library.CantDragForced == true then
+                    return;
+                end;
+  
+                local ObjPos = Vector2.new(
+                    Mouse.X - Parent.AbsolutePosition.X,
+                    Mouse.Y - Parent.AbsolutePosition.Y
+                );
+
+                if ObjPos.Y > (Cutoff or 40) then
+                    return;
+                end;
+
+                while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+                    Parent.Position = UDim2.new(
+                        0,
+                        Mouse.X - ObjPos.X + (Parent.Size.X.Offset * Parent.AnchorPoint.X),
+                        0,
+                        Mouse.Y - ObjPos.Y + (Parent.Size.Y.Offset * Parent.AnchorPoint.Y)
+                    );
+
+                    RenderStepped:Wait();
+                end;
+            end;
+        end);
+    else  
+        Library:MakeDraggable(Parent, Cutoff, IsMainWindow)
+    end;
+end;
+
+function Library:MakeResizable(Instance, MinSize)
+    if Library.IsMobile then
+        return;
+    end;
+
+    Instance.Active = true;
+    
+    local ResizerImage_Size = 25 * DPIScale;
+    local ResizerImage_HoverTransparency = 0.5;
+
+    local Resizer = Library:Create('Frame', {
+        SizeConstraint = Enum.SizeConstraint.RelativeXX;
+        BackgroundColor3 = Color3.new(0, 0, 0);
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(0, 30, 0, 30);
+        Position = UDim2.new(1, -30, 1, -30);
+        Visible = true;
+        ClipsDescendants = true;
+        ZIndex = 1;
+        Parent = Instance;--Library.ScreenGui;
+    });
+
+    local ResizerImage = Library:Create('ImageButton', {
+        BackgroundColor3 = Library.AccentColor;
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(2, 0, 2, 0);
+        Position = UDim2.new(1, -30, 1, -30);
+        ZIndex = 2;
+        Parent = Resizer;
+    });
+
+    local ResizerImageUICorner = Library:Create('UICorner', {
+        CornerRadius = UDim.new(0.5, 0);
+        Parent = ResizerImage;
+    });
+
+    Library:AddToRegistry(ResizerImage, { BackgroundColor3 = 'AccentColor'; });
+
+    Resizer.Size = UDim2.fromOffset(ResizerImage_Size, ResizerImage_Size);
+    Resizer.Position = UDim2.new(1, -ResizerImage_Size, 1, -ResizerImage_Size);
+    MinSize = MinSize or Library.MinSize;
+
+    local OffsetPos;
+    Resizer.Parent = Instance;
+
+    local function FinishResize(Transparency)
+        ResizerImage.Position = UDim2.new();
+        ResizerImage.Size = UDim2.new(2, 0, 2, 0);
+        ResizerImage.Parent = Resizer;
+        ResizerImage.BackgroundTransparency = Transparency;
+        ResizerImageUICorner.Parent = ResizerImage;
+        OffsetPos = nil;
+    end;
+
+    ResizerImage.MouseButton1Down:Connect(function()
+        if not OffsetPos then
+            OffsetPos = Vector2.new(Mouse.X - (Instance.AbsolutePosition.X + Instance.AbsoluteSize.X), Mouse.Y - (Instance.AbsolutePosition.Y + Instance.AbsoluteSize.Y));
+
+            ResizerImage.BackgroundTransparency = 1
+            ResizerImage.Size = UDim2.fromOffset(Library.ScreenGui.AbsoluteSize.X, Library.ScreenGui.AbsoluteSize.Y);
+            ResizerImage.Position = UDim2.new();
+            ResizerImageUICorner.Parent = nil;
+            ResizerImage.Parent = Library.ScreenGui;
+        end;
+    end);
+
+    ResizerImage.MouseMoved:Connect(function()
+        if OffsetPos then		
+            local MousePos = Vector2.new(Mouse.X - OffsetPos.X, Mouse.Y - OffsetPos.Y);
+            local FinalSize = Vector2.new(math.clamp(MousePos.X - Instance.AbsolutePosition.X, MinSize.X, math.huge), math.clamp(MousePos.Y - Instance.AbsolutePosition.Y, MinSize.Y, math.huge));
+            Instance.Size = UDim2.fromOffset(FinalSize.X, FinalSize.Y);
+        end;
+    end);
+
+    ResizerImage.MouseEnter:Connect(function()
+        FinishResize(ResizerImage_HoverTransparency);	
+    end);
+
+    ResizerImage.MouseLeave:Connect(function()
+        FinishResize(1);
+    end);
+
+    ResizerImage.MouseButton1Up:Connect(function()
+        FinishResize(ResizerImage_HoverTransparency);
+    end);
+end;
+
+function Library:AddToolTip(InfoStr, DisabledInfoStr, HoverInstance)
+    InfoStr = typeof(InfoStr) == "string" and InfoStr or nil;
+    DisabledInfoStr = typeof(DisabledInfoStr) == "string" and DisabledInfoStr or nil;
+
+    local Tooltip = Library:Create('Frame', {
+        BackgroundColor3 = Library.MainColor;
+        BorderColor3 = Library.OutlineColor;
+
+        ZIndex = 100;
+        Parent = Library.ScreenGui;
+
+        Visible = false;
+    });
+
+    local Label = Library:CreateLabel({
+        Position = UDim2.fromOffset(3, 1);
+        
+        TextSize = 14;
+        Text = InfoStr;
+        TextColor3 = Library.FontColor;
+        TextXAlignment = Enum.TextXAlignment.Left;
+        ZIndex = Tooltip.ZIndex + 1;
+
+        Parent = Tooltip;
+    });
+
+    Library:AddToRegistry(Tooltip, {
+        BackgroundColor3 = 'MainColor';
+        BorderColor3 = 'OutlineColor';
+    });
+
+    Library:AddToRegistry(Label, {
+        TextColor3 = 'FontColor',
+    });
+
+    local TooltipTable = {
+        Tooltip = Tooltip;
+        Disabled = false;
+
+        Signals = {};
+    }
+    local IsHovering = false
+
+    local function UpdateText(Text)
+        if Text == nil then return end
+
+        local X, Y = Library:GetTextBounds(Text, Library.Font, 14 * DPIScale);
+
+        Label.Text = Text;
+        Tooltip.Size = UDim2.fromOffset(X + 5, Y + 4);
+        Label.Size = UDim2.fromOffset(X, Y);
+    end
+    UpdateText(InfoStr);
+
+    table.insert(TooltipTable.Signals, HoverInstance.MouseEnter:Connect(function()
+        if Library:MouseIsOverOpenedFrame() then
+            Tooltip.Visible = false
+            return
+        end
+
+        if not TooltipTable.Disabled then
+            if InfoStr == nil or InfoStr == "" then
+                Tooltip.Visible = false
+                return
+            end
+
+            if Label.Text ~= InfoStr then UpdateText(InfoStr); end
+        else
+            if DisabledInfoStr == nil or DisabledInfoStr == "" then
+                Tooltip.Visible = false
+                return
+            end
+
+            if Label.Text ~= DisabledInfoStr then UpdateText(DisabledInfoStr); end
+        end
+
+        IsHovering = true
+
+        Tooltip.Position = UDim2.fromOffset(Mouse.X + 15, Mouse.Y + 12)
+        Tooltip.Visible = true
+
+        while IsHovering do
+            if TooltipTable.Disabled == true and DisabledInfoStr == nil then break end
+
+            RunService.Heartbeat:Wait()
+            Tooltip.Position = UDim2.fromOffset(Mouse.X + 15, Mouse.Y + 12)
+        end
+
+        IsHovering = false
+        Tooltip.Visible = false
+    end))
+
+    table.insert(TooltipTable.Signals, HoverInstance.MouseLeave:Connect(function()
+        IsHovering = false
+        Tooltip.Visible = false
+    end))
+    
+    if LibraryMainOuterFrame then
+        table.insert(TooltipTable.Signals, LibraryMainOuterFrame:GetPropertyChangedSignal("Visible"):Connect(function()
+            if LibraryMainOuterFrame.Visible == false then
+                IsHovering = false
+                Tooltip.Visible = false
+            end
+        end))
+    end
+
+    function TooltipTable:Destroy()
+        Tooltip:Destroy();
+
+        for Idx = #TooltipTable.Signals, 1, -1 do
+            local Connection = table.remove(TooltipTable.Signals, Idx);
+            Connection:Disconnect();
+        end
+    end
+
+    return TooltipTable
+end
+
+function Library:OnHighlight(HighlightInstance, Instance, Properties, PropertiesDefault, condition)
+    local function undoHighlight()
+        local Reg = Library.RegistryMap[Instance];
+
+        for Property, ColorIdx in next, PropertiesDefault do
+            Instance[Property] = Library[ColorIdx] or ColorIdx;
+
+            if Reg and Reg.Properties[Property] then
+                Reg.Properties[Property] = ColorIdx;
+            end;
+        end;
+    end
+    local function doHighlight()
+        if condition and not condition() then undoHighlight() return end
+        local Reg = Library.RegistryMap[Instance];
+
+        for Property, ColorIdx in next, Properties do
+            Instance[Property] = Library[ColorIdx] or ColorIdx;
+
+            if Reg and Reg.Properties[Property] then
+                Reg.Properties[Property] = ColorIdx;
+            end;
+        end;
+    end
+
+    HighlightInstance.MouseEnter:Connect(function()
+        doHighlight()
+    end)
+    HighlightInstance.MouseMoved:Connect(function()
+        doHighlight()
+    end)
+    HighlightInstance.MouseLeave:Connect(function()
+        undoHighlight()
+    end)
+end;
+
+function Library:MouseIsOverOpenedFrame(Input)
+    local Pos = Mouse;
+    if Library.IsMobile and Input then 
+        Pos = Input.Position;
+    end;
+
+    for Frame, _ in next, Library.OpenedFrames do
+        local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize;
+
+        if Po
